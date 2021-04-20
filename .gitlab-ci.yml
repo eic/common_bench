@@ -42,7 +42,7 @@ detector:
       - .local/lib
   script:
     - whoami
-    - ssh warmstrong@localhost "singularity exec -B /lcrc/globalscratch/eicweb:/scratch -B /gpfs juggler.sif source /lcrc/project/jlab/setup.sh && cd ${PWD} && bash bin/init_detector.sh"
+    - source /lcrc/project/jlab/setup.sh && ssh warmstrong@localhost "singularity exec -B /lcrc/globalscratch/eicweb:/scratch -B /gpfs juggler.sif cd ${PWD} && bash bin/init_detector.sh"
 
 #get_data:
 #  stage: data_init
