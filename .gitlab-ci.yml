@@ -42,7 +42,7 @@ detector:
       - .local/lib
   script:
     - whoami && hostname
-    - ssh warmstrong@localhost "cd ${PWD} && module load singularity && singularity exec -B /lcrc/globalscratch/eicweb:/scratch -B /gpfs juggler.sif bash bin/init_detector.sh"
+    - ssh warmstrong@localhost "cd ${PWD} && module load singularity && singularity exec -B /lcrc/globalscratch/eicweb:/scratch -B /gpfs $HOME/juggler.sif bash bin/init_detector.sh"
 
 #get_data:
 #  stage: data_init
