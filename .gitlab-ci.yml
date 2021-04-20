@@ -22,32 +22,25 @@ env:
     - bebop
   stage: config
   script:
-    - ./util/print_env.sh
-    - mkdir -p /scratch/${CI_PROJECT_NAME}_${CI_PIPELINE_ID}
-    - mkdir -p /scratch/${CI_PROJECT_NAME}_${CI_PIPELINE_ID}/sim_output
-    - ls -lrth 
+    - bash bin/config_env.sh
 
-#
-#detector:
-#  stage: initialize
-#  needs: ["env"]
-#  timeout: 1 hours
-#  cache:
-#    key:
-#      files:
-#        - options/env.sh
-#        - util/build_detector.sh
-#      prefix: "$CI_COMMIT_REF_SLUG"
-#    paths:
-#      - .local/detector
-#      - .local/lib
-#  script:
-#    - ./util/print_env.sh
-#    - ./util/build_detector.sh
-#    - ./util/print_env.sh
-#    - mkdir -p results
-#    - mkdir -p config
-#
+
+detector:
+  stage: initialize
+  needs: ["env"]
+  timeout: 1 hours
+  cache:
+    key:
+      files:
+        - options/env.sh
+        - util/build_detector.sh
+      prefix: "$CI_COMMIT_REF_SLUG"
+    paths:
+      - .local/detector
+      - .local/lib
+  script:
+    - ssh localhost singularity exec -B /lcrc/globalscratch/eicweb:/scratch juggler.sif "cd ${PWD} && bash bin/init_detector.sh"
+
 #get_data:
 #  stage: data_init
 #  needs: ["detector"]
