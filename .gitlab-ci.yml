@@ -41,7 +41,7 @@ detector:
       - .local/detector
       - .local/lib
   script:
-    - whoami
+    - whoami && hostname
     - source /lcrc/project/jlab/setup.sh && ssh warmstrong@localhost "singularity exec -B /lcrc/globalscratch/eicweb:/scratch -B /gpfs juggler.sif cd ${PWD} && bash bin/init_detector.sh"
 
 #get_data:
