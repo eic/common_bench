@@ -39,7 +39,8 @@ detector:
       - .local/detector
       - .local/lib
   script:
-    - ssh localhost singularity exec -B /lcrc/globalscratch/eicweb:/scratch juggler.sif "cd ${PWD} && bash bin/init_detector.sh"
+    - whoami
+    - ssh localhost "singularity exec -B /lcrc/globalscratch/eicweb:/scratch juggler.sif cd ${PWD} && bash bin/init_detector.sh"
 
 #get_data:
 #  stage: data_init
