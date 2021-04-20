@@ -18,7 +18,8 @@ stages:
   - deploy
 
 env:
-  tags: bebop
+  tags: 
+    - bebop
   stage: config
   script:
     - ./util/print_env.sh
