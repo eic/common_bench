@@ -26,6 +26,8 @@ env:
 
 
 detector:
+  tags: 
+    - bebop
   stage: initialize
   needs: ["env"]
   timeout: 1 hours
