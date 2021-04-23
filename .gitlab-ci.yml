@@ -6,6 +6,8 @@ default:
     paths:
       - .local/detector
       - .local/lib
+      - .local/bin
+      - .local/include
       - results
       - config
 
