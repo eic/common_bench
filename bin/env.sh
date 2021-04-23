@@ -34,7 +34,7 @@ if [ ! -n  "${JUGGLER_DETECTOR}" ] ; then
 fi
 
 if [ ! -n  "${JUGGLER_DETECTOR_VERSION}" ] ; then 
-  export JUGGLER_DETECTOR_VERSION="v0.0.1"
+  export JUGGLER_DETECTOR_VERSION="master"
 fi
 
 
@@ -68,6 +68,12 @@ fi
 export JUGGLER_INSTALL_PREFIX=`realpath ${JUGGLER_INSTALL_PREFIX}`
 
 
+## Location of local data for pass data from job to job within pipeline.
+## Not saved as artifacts.
+if [ ! -n  "${LOCAL_DATA_PATH}" ] ; then 
+  export LOCAL_DATA_PATH="/scratch/${CI_PROJECT_NAME}_${CI_PIPELINE_ID}"
+fi
+
 ## =============================================================================
 ## Other utility variables that govern how some of the dependent packages
 ## are built and installed. You should not have to change these.
@@ -94,6 +100,7 @@ echo "JUGGLER_N_EVENTS:           ${JUGGLER_N_EVENTS}"
 echo "JUGGLER_N_THREADS:          ${JUGGLER_N_THREADS}"
 echo "JUGGLER_RNG_SEED:           ${JUGGLER_RNG_SEED}"
 echo "JUGGLER_INSTALL_PREFIX:     ${JUGGLER_INSTALL_PREFIX}"
+echo "LOCAL_DATA_PATH:            ${LOCAL_DATA_PATH}"
 echo "LOCAL_PREFIX:               ${LOCAL_PREFIX}"
 echo "DETECTOR_PREFIX:            ${DETECTOR_PREFIX}"
 echo "DETECTOR_PATH:              ${DETECTOR_PATH}"
