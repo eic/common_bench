@@ -46,7 +46,7 @@ detector:
     - whoami && hostname
     - ls -lrth
     - pwd
-    - ./bin/init_detector.sh"
+    - ./bin/init_detector.sh
 
 #get_data:
 #  stage: data_init
