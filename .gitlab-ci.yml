@@ -21,7 +21,7 @@ stages:
 
 env:
   tags: 
-    - bebop
+    - singularity
   stage: config
   script:
     - bash bin/config_env.sh
@@ -29,7 +29,7 @@ env:
 
 detector:
   tags: 
-    - bebop
+    - singularity
   stage: initialize
   needs: ["env"]
   timeout: 1 hours
