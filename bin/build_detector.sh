@@ -20,7 +20,7 @@ pushd ${PROJECT_ROOT}
 ##
 ## You can read options/env.sh for more in-depth explanations of the variables
 ## and how they can be controlled.
-source options/env.sh
+source bin/env.sh
 
 ## =============================================================================
 ## Step 1: download/update the detector definitions (if needed)
