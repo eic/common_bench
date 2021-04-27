@@ -51,6 +51,7 @@ detector:
     - ./bin/print_env.sh
     - mkdir -p results
     - mkdir -p config
+    - echo "$CI_PIPLINE_ID" && echo "$CI_PROJECT_NAME"
 
 #get_data:
 #  stage: data_init
