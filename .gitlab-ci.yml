@@ -33,18 +33,20 @@ detector:
   stage: initialize
   needs: ["env"]
   timeout: 1 hours
-  cache:
-    key:
-      files:
-        - options/env.sh
-        - util/build_detector.sh
-      prefix: "$CI_COMMIT_REF_SLUG"
-    paths:
-      - .local/detector
-      - .local/lib
+    #cache:
+    #  key:
+    #    files:
+    #      - options/env.sh
+    #      - util/build_detector.sh
+    #    prefix: "$CI_COMMIT_REF_SLUG"
+    #  paths:
+    #    - .local/detector
+    #    - .local/lib
   script:
     - whoami && hostname
-    - ssh warmstrong@localhost "cd ${PWD} && module load singularity && singularity exec -B /lcrc/globalscratch/eicweb:/scratch -B /gpfs $HOME/juggler.sif bash bin/init_detector.sh"
+    - ls -lrth
+    - pwd
+    - ./bin/init_detector.sh"
 
 #get_data:
 #  stage: data_init
