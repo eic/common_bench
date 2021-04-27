@@ -46,7 +46,11 @@ detector:
     - whoami && hostname
     - ls -lrth
     - pwd
-    - ./bin/init_detector.sh
+    - ./bin/print_env.sh
+    - ./bin/build_detector.sh
+    - ./bin/print_env.sh
+    - mkdir -p results
+    - mkdir -p config
 
 #get_data:
 #  stage: data_init

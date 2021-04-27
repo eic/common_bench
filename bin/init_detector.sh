@@ -1,6 +1,6 @@
 #!/bin/bash
- ./util/print_env.sh
- ./util/build_detector.sh
- ./util/print_env.sh
- mkdir -p results
- mkdir -p config
+./bin/print_env.sh
+./bin/build_detector.sh
+./bin/print_env.sh
+mkdir -p results
+mkdir -p config
