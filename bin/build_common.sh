@@ -23,8 +23,8 @@ if [[ -n "${LOCAL_PREFIX}" ]]  ; then
   #echo "Fetching common_bench"
   #git clone https://eicweb.phy.anl.gov/EIC/benchmarks/common_bench.git
   cp -r common_bench/bin/*     "${LOCAL_PREFIX}/bin/."
-  cp -r common_bench/tools/*     "${LOCAL_PREFIX}/bin/."
-  cp -r common_bench/util/*     "${LOCAL_PREFIX}/bin/."
+  cp -r common_bench/bin/*     "${LOCAL_PREFIX}/bin/."
+  cp -r common_bench/bin/*     "${LOCAL_PREFIX}/bin/."
   cp -r common_bench/include/* "${LOCAL_PREFIX}/include/."
 
 fi
