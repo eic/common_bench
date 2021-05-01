@@ -13,6 +13,7 @@
 ##
 ## It also defines the following additional variables for internal usage
 ##  - LOCAL_PREFIX:           prefix for packages installed during the benchmark
+##  - LOCAL_DATA_PATH:        local storage for pipeline jobs
 ##  - DETECTOR_PREFIX:        prefix for the detector definitions
 ##  - DETECTOR_PATH:          actual path with the detector definitions
 ##
@@ -70,6 +71,7 @@ export JUGGLER_INSTALL_PREFIX=`realpath ${JUGGLER_INSTALL_PREFIX}`
 
 ## Location of local data for pass data from job to job within pipeline.
 ## Not saved as artifacts.
+## Local /scratch directory is presumed to be writable. 
 if [ ! -n  "${LOCAL_DATA_PATH}" ] ; then 
   export LOCAL_DATA_PATH="/scratch/${CI_PROJECT_NAME}_${CI_PIPELINE_ID}"
 fi
@@ -100,8 +102,8 @@ echo "JUGGLER_N_EVENTS:           ${JUGGLER_N_EVENTS}"
 echo "JUGGLER_N_THREADS:          ${JUGGLER_N_THREADS}"
 echo "JUGGLER_RNG_SEED:           ${JUGGLER_RNG_SEED}"
 echo "JUGGLER_INSTALL_PREFIX:     ${JUGGLER_INSTALL_PREFIX}"
-echo "LOCAL_DATA_PATH:            ${LOCAL_DATA_PATH}"
 echo "LOCAL_PREFIX:               ${LOCAL_PREFIX}"
+echo "LOCAL_DATA_PATH:            ${LOCAL_DATA_PATH}"
 echo "DETECTOR_PREFIX:            ${DETECTOR_PREFIX}"
 echo "DETECTOR_PATH:              ${DETECTOR_PATH}"
 echo "ROOT_BUILD_DIR:             ${ROOT_BUILD_DIR}"
