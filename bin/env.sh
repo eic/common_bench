@@ -32,6 +32,15 @@ echo "Setting up the Physics Benchmarks environment"
 ## in case you would like to modify the detector package or
 ## number of events to be analyzed during the benchmark
 
+if [ ! -n  "${BEAMLINE_CONFIG}" ] ; then 
+  export BEAMLINE_CONFIG="ip6"
+fi
+
+if [ ! -n  "${BEAMLINE_CONFIG_VERSION}" ] ; then 
+  export BEAMLINE_CONFIG_VERSION="master"
+fi
+
+
 ## Detector package to be used during the benchmark process
 if [ ! -n  "${JUGGLER_DETECTOR}" ] ; then 
   export JUGGLER_DETECTOR="topside"
@@ -110,6 +119,8 @@ echo "LOCAL_DATA_PATH:            ${LOCAL_DATA_PATH}"
 echo "DETECTOR_PREFIX:            ${DETECTOR_PREFIX}"
 echo "DETECTOR_PATH:              ${DETECTOR_PATH}"
 echo "ROOT_BUILD_DIR:             ${ROOT_BUILD_DIR}"
+echo "BEAMLINE_CONFIG:            ${BEAMLINE_CONFIG}"
+echo "BEAMLINE_CONFIG_VERSION:    ${BEAMLINE_CONFIG_VERSION}"
 
 ## =============================================================================
 ## Setup PATH and LD_LIBRARY_PATH to include our prefixes
