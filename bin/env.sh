@@ -87,6 +87,11 @@ export JUGGLER_INSTALL_PREFIX=`realpath ${JUGGLER_INSTALL_PREFIX}`
 if [ ! -n  "${LOCAL_DATA_PATH}" ] ; then 
   export LOCAL_DATA_PATH="/scratch/${CI_PROJECT_NAME}_${CI_PIPELINE_ID}"
 fi
+mkdir -p "${LOCAL_DATA_PATH}"
+if [ ! -d "${LOCAL_DATA_PATH}" ]; then 
+  echo "LOCAL_DATA_PATH (${LOCAL_DATA_PATH}) does not exist!!"
+  exit 1
+fi
 
 ## =============================================================================
 ## Other utility variables that govern how some of the dependent packages
@@ -115,12 +120,12 @@ echo "JUGGLER_N_THREADS:          ${JUGGLER_N_THREADS}"
 echo "JUGGLER_RNG_SEED:           ${JUGGLER_RNG_SEED}"
 echo "JUGGLER_INSTALL_PREFIX:     ${JUGGLER_INSTALL_PREFIX}"
 echo "LOCAL_PREFIX:               ${LOCAL_PREFIX}"
-echo "LOCAL_DATA_PATH:            ${LOCAL_DATA_PATH}"
 echo "DETECTOR_PREFIX:            ${DETECTOR_PREFIX}"
 echo "DETECTOR_PATH:              ${DETECTOR_PATH}"
 echo "ROOT_BUILD_DIR:             ${ROOT_BUILD_DIR}"
 echo "BEAMLINE_CONFIG:            ${BEAMLINE_CONFIG}"
 echo "BEAMLINE_CONFIG_VERSION:    ${BEAMLINE_CONFIG_VERSION}"
+echo "LOCAL_DATA_PATH:            ${LOCAL_DATA_PATH}"
 
 ## =============================================================================
 ## Setup PATH and LD_LIBRARY_PATH to include our prefixes

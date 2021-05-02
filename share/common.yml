@@ -29,6 +29,6 @@ common:detector:
       - config
   script:
     - source .local/bin/env.sh && build_detector.sh
-    - mkdir -p /scratch/${CI_PROJECT_NAME}_${CI_PIPELINE_ID}
-    - mkdir -p /scratch/${CI_PROJECT_NAME}_${CI_PIPELINE_ID}/sim_output
+    - bin/mkdir_local_data_link sim_output 
     - print_env.sh
+    - ls -lrth
