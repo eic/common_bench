@@ -1,4 +1,6 @@
 default:
+  tags: 
+    - singularity
   before_script:
     - ls -lrth && pwd
   artifacts:
@@ -19,39 +21,42 @@ stages:
   - benchmarks
   - deploy
 
-env:
-  tags: 
-    - singularity
-  stage: config
-  script:
-    - bash bin/config_env.sh
 
+include: '.local/share/common.yml'
 
-detector:
-  tags: 
-    - singularity
-  stage: initialize
-  needs: ["env"]
-  timeout: 1 hours
-    #cache:
-    #  key:
-    #    files:
-    #      - options/env.sh
-    #      - util/build_detector.sh
-    #    prefix: "$CI_COMMIT_REF_SLUG"
-    #  paths:
-    #    - .local/detector
-    #    - .local/lib
-  script:
-    - whoami && hostname
-    - ls -lrth
-    - pwd
-    - ./bin/print_env.sh
-    - ./bin/build_detector.sh
-    - ./bin/print_env.sh
-    - mkdir -p results
-    - mkdir -p config
-    - echo "$CI_PIPLINE_ID" && echo "$CI_PROJECT_NAME"
+    #env:
+    #  tags: 
+    #    - singularity
+    #  stage: config
+    #  script:
+    #    - bash bin/config_env.sh
+    #
+    #
+    #detector:
+    #  tags: 
+    #    - singularity
+    #  stage: initialize
+    #  needs: ["env"]
+    #  timeout: 1 hours
+    #    #cache:
+    #    #  key:
+    #    #    files:
+    #    #      - options/env.sh
+    #    #      - util/build_detector.sh
+    #    #    prefix: "$CI_COMMIT_REF_SLUG"
+    #    #  paths:
+    #    #    - .local/detector
+    #    #    - .local/lib
+    #  script:
+    #    - whoami && hostname
+    #    - ls -lrth
+    #    - pwd
+    #    - ./bin/print_env.sh
+    #    - ./bin/build_detector.sh
+    #    - ./bin/print_env.sh
+    #    - mkdir -p results
+    #    - mkdir -p config
+    #    - echo "$CI_PIPLINE_ID" && echo "$CI_PROJECT_NAME"
 
 #get_data:
 #  stage: data_init
