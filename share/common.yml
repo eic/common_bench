@@ -1,5 +1,15 @@
 common:setup:
   stage: config
+  artifacts:
+    expire_in: 72 hours 
+    paths:
+      - .local/detector
+      - .local/lib
+      - .local/bin
+      - .local/include
+      - .local/share
+      - results
+      - config
   script:
     - git clone "${CI_REPOSITORY_URL}" setup 
     - source setup/bin/env.sh && ./setup/bin/build_common.sh
@@ -7,5 +17,15 @@ common:setup:
 common:detector:
   stage: initialize
   needs: ["common:setup"]
+  artifacts:
+    expire_in: 72 hours 
+    paths:
+      - .local/detector
+      - .local/lib
+      - .local/bin
+      - .local/include
+      - .local/share
+      - results
+      - config
   script:
     - source .local/bin/env.sh && build_detector.sh
