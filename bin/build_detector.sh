@@ -14,6 +14,7 @@ pushd ${PROJECT_ROOT}
 ##
 ## - JUGGLER_DETECTOR: the detector package we want to use for this benchmark
 ## - LOCAL_PREFIX:     location where local packages should be installed
+## - LOCAL_DATA_PATH:  local storage for pipeline jobs
 ## - DETECTOR_PREFIX:  prefix for the detector definitions 
 ## - DETECTOR_PATH:    full path for the detector definitions
 ##                     this is the same as ${DETECTOR_PREFIX}/${JUGGLER_DETECTOR}

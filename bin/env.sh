@@ -5,11 +5,14 @@
 ## The script defines the following environment variables that are meant to
 ## be overriden by the Gitlab continuous integration (CI)
 ##
-##  - JUGGLER_DETECTOR:       detector package to be used for the benchmark
-##  - JUGGLER_N_EVENTS:       #events processed by simulation/reconstruction
-##  - JUGGLER_INSTALL_PREFIX: location where Juggler (digi/recon) is installed
-##  - JUGGLER_N_THREADS:      Number of threads/processes to spawn in parallel
-##  - JUGGLER_RNG_SEED:       Random seed for the RNG
+##  - BEAMLINE_CONFIG:         compact detector files for the interaciton point beamline
+##  - BEAMLINE_CONFIG_VERSION: compact detector files for the interaciton point beamline
+##  - JUGGLER_DETECTOR:        detector package to be used for the benchmark
+##  - JUGGLER_DETECTOR_VERISON:        detector package to be used for the benchmark
+##  - JUGGLER_N_EVENTS:        events processed by simulation/reconstruction
+##  - JUGGLER_INSTALL_PREFIX:  location where Juggler (digi/recon) is installed
+##  - JUGGLER_N_THREADS:       Number of threads/processes to spawn in parallel
+##  - JUGGLER_RNG_SEED:        Random seed for the RNG
 ##
 ## It also defines the following additional variables for internal usage
 ##  - LOCAL_PREFIX:           prefix for packages installed during the benchmark
