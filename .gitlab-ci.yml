@@ -10,6 +10,7 @@ default:
       - .local/lib
       - .local/bin
       - .local/include
+      - .local/share
       - results
       - config
 
