@@ -1,0 +1,11 @@
+#!/bin/bash
+set -o nounset
+set -o errexit
+
+dirname="$1"
+
+mkdir -p "${LOCAL_DATA_PATH}/${dirname}"
+ln -s "${LOCAL_DATA_PATH}/${dirname}" ${dirname}
+
+
+
