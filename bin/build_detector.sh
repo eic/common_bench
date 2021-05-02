@@ -35,6 +35,7 @@ if [ -d "${JUGGLER_DETECTOR}" ]; then
 fi
 echo "Fetching ${JUGGLER_DETECTOR}"
 git clone -b ${JUGGLER_DETECTOR_VERSION} --depth 1 https://eicweb.phy.anl.gov/EIC/detectors/${JUGGLER_DETECTOR}.git
+[[ -n "$?" ]]  ||  exit 1
 
 ## We need an up-to-date copy of the detector
 ## start clean to avoid issues...
@@ -45,6 +46,7 @@ fi
 echo "Fetching ${BEAMLINE_CONFIG}"
 echo "git clone -b ${BEAMLINE_CONFIG_VERSION} --depth 1 https://eicweb.phy.anl.gov/EIC/detectors/${BEAMLINE_CONFIG}.git"
 git clone -b ${BEAMLINE_CONFIG_VERSION} --depth 1 https://eicweb.phy.anl.gov/EIC/detectors/${BEAMLINE_CONFIG}.git
+[[ -n "$?" ]]  ||  exit 1
 
 ## We also need an up-to-date copy of the accelerator. For now this is done
 ## manually. Down the road we could maybe automize this with cmake
@@ -54,11 +56,14 @@ if [ -d accelerator ]; then
 fi
 echo "Fetching accelerator"
 git clone --depth 1 https://eicweb.phy.anl.gov/EIC/detectors/accelerator.git
+[[ -n "$?" ]]  ||  exit 1
 
 ## Now symlink the accelerator definition into the detector definition
 echo "Linking accelerator definition into detector definition"
 ln -s -f ${DETECTOR_PREFIX}/accelerator/eic ${DETECTOR_PATH}/eic
+[[ -n "$?" ]]  ||  exit 1
 ln -s -f ${DETECTOR_PREFIX}/${BEAMLINE_CONFIG}/${BEAMLINE_CONFIG} ${DETECTOR_PATH}/${BEAMLINE_CONFIG}
+[[ -n "$?" ]]  ||  exit 1
 
 popd
 ## =============================================================================
