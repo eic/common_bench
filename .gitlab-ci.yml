@@ -22,7 +22,7 @@ stages:
   - deploy
 
 
-include: '.local/share/common.yml'
+include: 'share/common.yml'
 
     #env:
     #  tags: 
