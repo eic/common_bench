@@ -47,7 +47,7 @@ fi
 echo "Fetching ${BEAMLINE_CONFIG}"
 echo "git clone -b ${BEAMLINE_CONFIG_VERSION} --depth 1 https://eicweb.phy.anl.gov/EIC/detectors/${BEAMLINE_CONFIG}.git"
 git clone -b ${BEAMLINE_CONFIG_VERSION} --depth 1 https://eicweb.phy.anl.gov/EIC/detectors/${BEAMLINE_CONFIG}.git
-[[ ! "$?" == "0" ]]  ||  exit 1
+[[ "$?" == "0" ]]  ||  exit 1
 rm -rf "${BEAMLINE_CONFIG}/.git"
 
 ## We also need an up-to-date copy of the accelerator. For now this is done
@@ -58,15 +58,15 @@ if [ -d accelerator ]; then
 fi
 echo "Fetching accelerator"
 git clone --depth 1 https://eicweb.phy.anl.gov/EIC/detectors/accelerator.git
-[[ ! "$?" == "0" ]]  ||  exit 1
+[[ "$?" == "0" ]]  ||  exit 1
 rm -rf "accelerator/.git"
 
 ## Now symlink the accelerator definition into the detector definition
 echo "Linking accelerator definition into detector definition"
 ln -s -f ${DETECTOR_PREFIX}/accelerator/eic ${DETECTOR_PATH}/eic
-[[ ! "$?" == "0" ]]  ||  exit 1
+[[ "$?" == "0" ]]  ||  exit 1
 ln -s -f ${DETECTOR_PREFIX}/${BEAMLINE_CONFIG}/${BEAMLINE_CONFIG} ${DETECTOR_PATH}/${BEAMLINE_CONFIG}
-[[ ! "$?" == "0" ]]  ||  exit 1
+[[ "$?" == "0" ]]  ||  exit 1
 
 popd
 ## =============================================================================
