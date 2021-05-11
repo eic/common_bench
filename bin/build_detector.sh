@@ -35,7 +35,8 @@ if [ -d "${JUGGLER_DETECTOR}" ]; then
 fi
 echo "Fetching ${JUGGLER_DETECTOR}"
 git clone -b ${JUGGLER_DETECTOR_VERSION} --depth 1 https://eicweb.phy.anl.gov/EIC/detectors/${JUGGLER_DETECTOR}.git
-[[ ! "$?" == "0" ]]  ||  exit 1
+echo "$?"
+[[ "$?" == "0" ]]  ||  exit 1
 rm -rf "${JUGGLER_DETECTOR}/.git"
 
 ## We need an up-to-date copy of the detector

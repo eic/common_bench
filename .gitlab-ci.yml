@@ -1,6 +1,4 @@
 default:
-  tags: 
-    - singularity
   before_script:
     - ls -lrth && pwd
   artifacts:
