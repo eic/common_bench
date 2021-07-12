@@ -143,7 +143,7 @@ if [ ! -f "EIC_Magnetic_Field_Map_2021_05_07_radial_coords__cm___T_.120000.lines
   wget -q "https://eicweb.phy.anl.gov/EIC/detectors/athena/uploads/9179a98c5a80df1f2b98968c747c1c48/EIC_Magnetic_Field_Map_2021_05_07_radial_coords__cm___T_.120000.lines.Bmap" 
 fi
 popd
-ln -s ${LOCAL_DATA_PATH}/fieldmaps
+ln -sf ${LOCAL_DATA_PATH}/fieldmaps
 
 ## =============================================================================
 ## That's all!
