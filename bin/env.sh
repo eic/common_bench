@@ -90,7 +90,9 @@ fi
 mkdir -p "${LOCAL_DATA_PATH}"
 if [ ! -d "${LOCAL_DATA_PATH}" ]; then 
   echo "LOCAL_DATA_PATH (${LOCAL_DATA_PATH}) does not exist!!"
-  exit 1
+  echo "Creating LOCAL_DATA_PATH=$(pwd)/local_data "
+  export LOCAL_DATA_PATH="$(pwd)/local_data"
+  mkdir -p "${LOCAL_DATA_PATH}"
 fi
 
 ## =============================================================================
@@ -100,7 +102,7 @@ fi
 ## local prefix to be used for local storage of packages
 ## downloaded/installed during the benchmark process
 LOCAL_PREFIX=".local"
-mkdir -p ${LOCAL_PREFIX}
+mkdir -p "${LOCAL_PREFIX}"
 export LOCAL_PREFIX=`realpath ${LOCAL_PREFIX}`
 
 ## detector prefix: prefix for the detector definitions

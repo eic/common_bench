@@ -4,10 +4,6 @@
 ## Build and install the JUGGLER_DETECTOR detector package into our local prefix
 ## =============================================================================
 
-## make sure we launch this script from the project root directory
-#PROJECT_ROOT="$( cd "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"/..
-#pushd ${PROJECT_ROOT}
-
 ## =============================================================================
 ## Load the environment variables. To build the detector we need the following
 ## variables:
@@ -18,10 +14,13 @@
 ## - DETECTOR_PREFIX:  prefix for the detector definitions 
 ## - DETECTOR_PATH:    full path for the detector definitions
 ##                     this is the same as ${DETECTOR_PREFIX}/${JUGGLER_DETECTOR}
-##
-## You can read options/env.sh for more in-depth explanations of the variables
-## and how they can be controlled.
-source $(dirname "$0")/env.sh
+
+if [ -n "${LOCAL_PREFIX}" ] ; then 
+  source .local/bin/env.sh
+else
+  source ${LOCAL_PREFIX}/bin/env.sh
+fi
+
 
 ## =============================================================================
 ## Step 1: download/update the detector definitions (if needed)
@@ -29,9 +28,10 @@ pushd ${DETECTOR_PREFIX}
 
 ## We need an up-to-date copy of the detector
 ## start clean to avoid issues...
+
 if [ -d "${JUGGLER_DETECTOR}" ]; then
   echo "cleaning up ${JUGGLER_DETECTOR}" 
-  mv "${JUGGLER_DETECTOR}" /tmp/.
+  mv "${JUGGLER_DETECTOR}" "$(mktemp)-${JUGGLER_DETECTOR}"
 fi
 echo "Fetching ${JUGGLER_DETECTOR}"
 git clone -b ${JUGGLER_DETECTOR_VERSION} --depth 1 https://eicweb.phy.anl.gov/EIC/detectors/${JUGGLER_DETECTOR}.git
@@ -42,7 +42,7 @@ rm -rf "${JUGGLER_DETECTOR}/.git"
 ## start clean to avoid issues...
 if [ -d "${BEAMLINE_CONFIG}" ]; then
   echo "cleaning up ${BEAMLINE_CONFIG}" 
-  mv "${BEAMLINE_CONFIG}" /tmp/.
+  mv "${BEAMLINE_CONFIG}" "$(mktemp)-${BEAMLINE_CONFIG}"
 fi
 echo "Fetching ${BEAMLINE_CONFIG}"
 echo "git clone -b ${BEAMLINE_CONFIG_VERSION} --depth 1 https://eicweb.phy.anl.gov/EIC/detectors/${BEAMLINE_CONFIG}.git"
@@ -54,7 +54,7 @@ rm -rf "${BEAMLINE_CONFIG}/.git"
 ## manually. Down the road we could maybe automize this with cmake
 if [ -d accelerator ]; then
   echo "cleaning up accelerator"
-  mv accelerator /tmp/.
+  mv "accelerator" "$(mktemp)-accelerator"
 fi
 echo "Fetching accelerator"
 git clone --depth 1 https://eicweb.phy.anl.gov/EIC/detectors/accelerator.git
