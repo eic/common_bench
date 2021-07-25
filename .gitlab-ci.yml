@@ -36,8 +36,6 @@ stages:
 
 common:variables:
   stage: config0
-  rules:
-    - if: '$CI_SERVER_HOST == "eicweb.phy.anl.gov"' 
   script:
     - |
       echo "   CI_PIPELINE_SOURCE = ${CI_PIPELINE_SOURCE}"
@@ -75,15 +73,15 @@ detector_benchmarks:
     project: EIC/benchmarks/detector_benchmarks
     strategy: depend
 
-physics_benchmarks:
-  stage: benchmarks
-  needs: ["common:variables"]
-  variables:
-    JUGGLER_DETECTOR: "athena"
-    COMMON_BENCH_VERSION: "$COMMON_BENCH_VERSION"
-  trigger:
-    project: EIC/benchmarks/physics_benchmarks
-    strategy: depend
+    #physics_benchmarks:
+    #  stage: benchmarks
+    #  needs: ["common:variables"]
+    #  variables:
+    #    JUGGLER_DETECTOR: "athena"
+    #    COMMON_BENCH_VERSION: "$COMMON_BENCH_VERSION"
+    #  trigger:
+    #    project: EIC/benchmarks/physics_benchmarks
+    #    strategy: depend
 
 
 pages:
