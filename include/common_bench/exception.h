@@ -4,7 +4,7 @@
 #include <exception>
 #include <string>
 
-namespace eic::util {
+namespace common_bench {
   class Exception : public std::exception {
   public:
     Exception(std::string_view msg, std::string_view type = "exception") : msg_{msg}, type_{type} {}

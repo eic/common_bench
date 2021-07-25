@@ -12,8 +12,12 @@ default:
       - .local/share
       - results
       - config
+      - juggler.env
+    reports:
+      dotenv: juggler.env
 
 stages:
+  - config0
   - config
   - initialize
   - data_init
@@ -21,174 +25,70 @@ stages:
   - benchmarks
   - deploy
 
+common:variables:
+  stage: config0
+  #rules:
+  #  - if: '$CI_SERVER_HOST == "eicweb.phy.anl.gov"' 
+  script:
+    - |
+      echo "   CI_PIPELINE_SOURCE = ${CI_PIPELINE_SOURCE}"
+      echo " COMMON_BENCH_VERSION = ${COMMON_BENCH_VERSION}"
+      if [[ "${CI_PIPELINE_SOURCE}" == "push"  || "x${CI_PIPELINE_SOURCE}" == "xmerge_request_event"  || "$CI_COMMIT_BRANCH" == "master" ]]; then
+        export COMMON_BENCH_VERSION="${CI_COMMIT_REF_NAME}"
+        echo "COMMON_BENCH_VERSION = ${CI_COMMIT_REF_NAME}"
+        echo "COMMON_BENCH_VERSION=${CI_COMMIT_REF_NAME}" >> juggler.env
+      fi
+      echo "COMMON_BENCH_VERSION = ${COMMON_BENCH_VERSION}"
 
-include: 'share/common.yml'
+common:setup:
+  stage: config
+  needs: ["common:variables"]
+  script:
+    - git clone -b "${COMMON_BENCH_VERSION}" "${CI_REPOSITORY_URL}"  setup 
+    - source setup/bin/env.sh && ./setup/bin/install_common.sh
 
-    #env:
-    #  tags: 
-    #    - singularity
-    #  stage: config
-    #  script:
-    #    - bash bin/config_env.sh
-    #
-    #
-    #detector:
-    #  tags: 
-    #    - singularity
-    #  stage: initialize
-    #  needs: ["env"]
-    #  timeout: 1 hours
-    #    #cache:
-    #    #  key:
-    #    #    files:
-    #    #      - options/env.sh
-    #    #      - util/build_detector.sh
-    #    #    prefix: "$CI_COMMIT_REF_SLUG"
-    #    #  paths:
-    #    #    - .local/detector
-    #    #    - .local/lib
-    #  script:
-    #    - whoami && hostname
-    #    - ls -lrth
-    #    - pwd
-    #    - ./bin/print_env.sh
-    #    - ./bin/build_detector.sh
-    #    - ./bin/print_env.sh
-    #    - mkdir -p results
-    #    - mkdir -p config
-    #    - echo "$CI_PIPLINE_ID" && echo "$CI_PROJECT_NAME"
+common:detector:
+  stage: initialize
+  needs: ["common:setup"]
+  script:
+    - source .local/bin/env.sh && build_detector.sh
+    - bin/mkdir_local_data_link sim_output 
+    - print_env.sh
+    - ls -lrth
 
-#get_data:
-#  stage: data_init
-#  needs: ["detector"]
-#  script:
-#    - source options/env.sh
-#    - ln -s ${LOCAL_DATA_PATH}/sim_output sim_output
-#    - ln -s ${LOCAL_DATA_PATH}/datasets/data data
-#    - cd ${LOCAL_DATA_PATH} && git clone --depth=1 https://eicweb.phy.anl.gov/EIC/datasets.git datasets
-#
-#.det_benchmark:
-#  needs:
-#    - ["get_data"]
-#  before_script:
-#    - source options/env.sh
-#    - ln -s ${LOCAL_DATA_PATH}/sim_output sim_output
-#    - ln -s ${LOCAL_DATA_PATH}/datasets/data data
-#  artifacts:
-#    expire_in: 20 weeks
-#    paths:
-#      - results/
-#
-#
-#include: 
-#  - local: 'benchmarks/trackers/config.yml'
-#  - local: 'benchmarks/calorimeters/config.yml'
-#  - local: 'benchmarks/pid/config.yml'
-#
-#    #roman_pot_simu:
-#    #  stage: simulate
-#    #  needs: 
-#    #    - ["get_data","detector"]
-#    #  script:
-#    #    - bash benchmarks/trackers/roman_pot_simu.sh
-#    #
-#    #roman_pot_nhits:
-#    #  stage: benchmarks
-#    #  needs:
-#    #    - ["roman_pot_simu","detector"]
-#    #  script:
-#    #    - root -b -q benchmarks/trackers/simple_tracking.cxx+
-#    #  allow_failure: true
-#    #
-#    #roman_pot_eta:
-#    #  stage: benchmarks
-#    #  needs:
-#    #    - ["roman_pot_simu","detector"]
-#    #  script:
-#    #    - root -b -q benchmarks/trackers/roman_pot_hit_eta.cxx+
-#    #  allow_failure: true
-#    #
-#    #zdc_simulation:
-#    #  stage: simulate
-#    #  needs: 
-#    #    - ["get_data","detector"]
-#    #  script:
-#    #    - bash benchmarks/calorimeters/run_simulation_zdc.sh
-#    #
-#    #cal_test_3_zdc_neutrons_reader:
-#    #  stage: benchmarks
-#    #  needs: 
-#    #    - ["zdc_simulation","detector"]
-#    #  script:
-#    #    - root -b -q benchmarks/calorimeters/zdc_neutrons_reader.cxx
-#    #  allow_failure: true
-#    #
-#    #
-#    #zdc_benchmark:
-#    #  stage: benchmarks
-#    #  needs: 
-#    #    - ["zdc_simulation","detector"]
-#    #  script:
-#    #    - ls -lrth sim_output
-#    #    - root -b -q benchmarks/calorimeters/simple_checking.cxx+
-#    #  allow_failure: true
-#    #
-#    #zdc_benchmark_info_histogram:
-#    #  stage: benchmarks
-#    #  needs: 
-#    #    - ["zdc_simulation","detector"]
-#    #  script:
-#    #    - root -b -q benchmarks/calorimeters/simple_info_plot_histograms.cxx+
-#    #  allow_failure: true
-#    #
-#    #crystal_emcal_simulation:
-#    #  stage: simulate
-#    #  needs: 
-#    #    - ["get_data"]
-#    #  script:
-#    #     bash benchmarks/calorimeters/run_simulation_crystal.sh
-#    #
-#    #crystal_benchmark:
-#    #  stage: benchmarks
-#    #  needs:
-#    #    - ["crystal_emcal_simulation","detector"]
-#    #  script:
-#    #    - ls -lrth sim_output
-#    #    - root -b -q benchmarks/calorimeters/simple_checking_crystal.cxx+
-#    #  allow_failure: true
-#    #
-#    #crystal_pion_simulation:
-#    #  stage: simulate
-#    #  needs:
-#    #    - ["get_data","detector"]
-#    #  tags:
-#    #    - silicon
-#    #  script:
-#    #    - source options/env.sh
-#    #    - npsim --runType batch --numberOfEvents 100 --compactFile ${DETECTOR_PATH}/topside.xml --inputFiles  data/emcal_electrons.hepmc  --outputFile  sim_output/output_emcal_electrons.root
-#
-#deploy_results:
-#  stage: deploy
-#  needs:
-#    - ["cal_bench:zdc_benchmark"]
-#  tags:
-#    - silicon
-#  script:
-#    - echo "deploy results!"
-#
-#
-#pages:
-#  stage: deploy
-#  rules:
-#    - if: '$CI_COMMIT_BRANCH == "master" && $CI_SERVER_HOST != "eicweb.phy.anl.gov"'
-#  cache:
-#    paths:
-#      - node_modules/
-#  image: node:latest
-#  script:
-#    - mkdir public && cp doc/main.html public/index.html
-#  artifacts:
-#    paths:
-#      - public
-#
-#
+detector_benchmarks:
+  stage: benchmarks
+  needs: ["common:variables"]
+  variables:
+    JUGGLER_DETECTOR: "athena"
+    COMMON_BENCH_VERSION: "$COMMON_BENCH_VERSION"
+  trigger:
+    project: EIC/benchmarks/detector_benchmarks
+    strategy: depend
+
+physics_benchmarks:
+  stage: benchmarks
+  needs: ["common:variables"]
+  variables:
+    JUGGLER_DETECTOR: "athena"
+    COMMON_BENCH_VERSION: "$COMMON_BENCH_VERSION"
+  trigger:
+    project: EIC/benchmarks/physics_benchmarks
+    strategy: depend
+
+
+pages:
+  image: eicweb.phy.anl.gov:4567/containers/eic_container/alpine
+  stage: deploy
+  rules:
+    - if: '$CI_SERVER_HOST == "gitlab.phy.anl.gov" && $CI_COMMIT_BRANCH == "master"' 
+  script:
+    - apk update && apk add doxygen  graphviz ttf-ubuntu-font-family
+    - cd doc && doxygen Doxyfile  && cd ..
+    - mkdir -p public && cp -r doc/docs/html/* public/.
+    #    - mkdir build && cd build && cmake ../. -DCMAKE_INSTALL_PREFIX=../install && make doc_doxygen && cd ..
+    #- cp -r build/doxygen_output/html public
+  artifacts:
+    paths:
+    - public
+

@@ -17,7 +17,8 @@ if [[ -n "${LOCAL_PREFIX}" ]]  ; then
   mkdir -p "${LOCAL_PREFIX}/share"
 
   cp -v -r ${SETUP_DIR}/bin/*     "${LOCAL_PREFIX}/bin/."
-  cp -v -r ${SETUP_DIR}/include/* "${LOCAL_PREFIX}/include/."
+  cp -v -r ${SETUP_DIR}/include/* "${LOCAL_PREFIX}/include/." 
+  #cp -v -r ${SETUP_DIR}/include/common_bench/* "${LOCAL_PREFIX}/include/."
   cp -v -r ${SETUP_DIR}/share/*   "${LOCAL_PREFIX}/share/."
 
 else
