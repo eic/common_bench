@@ -135,8 +135,8 @@ echo "LOCAL_DATA_PATH:            ${LOCAL_DATA_PATH}"
 ## =============================================================================
 ## Setup PATH and LD_LIBRARY_PATH to include our prefixes
 echo "Adding JUGGLER_INSTALL_PREFIX and LOCAL_PREFIX to PATH and LD_LIBRARY_PATH"
-export PATH=${JUGGLER_INSTALL_PREFIX}/bin:${LOCAL_PREFIX}/bin:${PATH}
-export LD_LIBRARY_PATH=${JUGGLER_INSTALL_PREFIX}/lib:${LOCAL_PREFIX}/lib:${LD_LIBRARY_PATH}
+export PATH=${LOCAL_PREFIX}/bin:${JUGGLER_INSTALL_PREFIX}/bin:${PATH}
+export LD_LIBRARY_PATH=${LOCAL_PREFIX}/lib:${JUGGLER_INSTALL_PREFIX}/lib:${LD_LIBRARY_PATH}
 
 mkdir -p ${LOCAL_DATA_PATH}/fieldmaps
 pushd ${LOCAL_DATA_PATH}/fieldmaps
