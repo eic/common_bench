@@ -107,8 +107,8 @@ momenta_from_simulation(const std::vector<dd4pod::Geant4ParticleData> &parts) {
   // transform our simulation particle data into 4-momenta
   std::transform(parts.begin(), parts.end(), momenta.begin(),
                  [](const auto &part) {
-                   return ROOT::Math::PxPyPzMVector{part.psx, part.psy,
-                                                    part.psz, part.mass};
+                   return ROOT::Math::PxPyPzMVector{part.ps.x, part.ps.y,
+                                                    part.ps.z, part.mass};
                  });
   return momenta;
 }
