@@ -9,7 +9,8 @@
 #include <fmt/core.h>
 #include <vector>
 
-namespace common_bench::plot {
+namespace common_bench {
+namespace plot {
 
 const int kArgonneBlue = TColor::GetColor(0x1f, 0x77, 0xb4); // not really
 
@@ -40,5 +41,7 @@ void draw_label(int ebeam, int pbeam, const std::string_view detector) {
 }
 
 } // namespace common_bench::plot
+
+} // namespace common_bench
 
 #endif
