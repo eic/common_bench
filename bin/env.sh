@@ -138,13 +138,8 @@ echo "Adding JUGGLER_INSTALL_PREFIX and LOCAL_PREFIX to PATH and LD_LIBRARY_PATH
 export PATH=${LOCAL_PREFIX}/bin:${JUGGLER_INSTALL_PREFIX}/bin:${PATH}
 export LD_LIBRARY_PATH=${LOCAL_PREFIX}/lib:${JUGGLER_INSTALL_PREFIX}/lib:${LD_LIBRARY_PATH}
 
+# Local field maps
 mkdir -p ${LOCAL_DATA_PATH}/fieldmaps
-pushd ${LOCAL_DATA_PATH}/fieldmaps
-if [ ! -f "EIC_Magnetic_Field_Map_2021_05_07_radial_coords__cm___T_.120000.lines.Bmap " ] ; then
-  echo "Downloading fieldmap: EIC_Magnetic_Field_Map_2021_05_07_radial_coords__cm___T_.120000.lines.Bmap"
-  wget -q "https://eicweb.phy.anl.gov/EIC/detectors/athena/uploads/9179a98c5a80df1f2b98968c747c1c48/EIC_Magnetic_Field_Map_2021_05_07_radial_coords__cm___T_.120000.lines.Bmap" 
-fi
-popd
 ln -sf ${LOCAL_DATA_PATH}/fieldmaps
 
 ## =============================================================================
