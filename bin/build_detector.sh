@@ -75,13 +75,13 @@ echo "Building and installing the ${JUGGLER_DETECTOR} package"
 
 mkdir -p ${DETECTOR_PREFIX}/${JUGGLER_DETECTOR}_build
 pushd ${DETECTOR_PREFIX}/${JUGGLER_DETECTOR}_build
-cmake ${DETECTOR_PATH} -DCMAKE_INSTALL_PREFIX=${LOCAL_PREFIX} -DCMAKE_CXX_STANDARD=17 && make -j$((nproc/4+1)) install || exit 1
+cmake ${DETECTOR_PATH} -DCMAKE_INSTALL_PREFIX=${LOCAL_PREFIX} -DCMAKE_CXX_STANDARD=17 && make -j$(($(nproc)/4+1)) install || exit 1
 popd
 rm -rf ${DETECTOR_PREFIX}/${JUGGLER_DETECTOR}_build
 
 mkdir -p ${DETECTOR_PREFIX}/${BEAMLINE_CONFIG}_build
 pushd ${DETECTOR_PREFIX}/${BEAMLINE_CONFIG}_build
-cmake ${DETECTOR_PREFIX}/${BEAMLINE_CONFIG} -DCMAKE_INSTALL_PREFIX=${LOCAL_PREFIX} -DCMAKE_CXX_STANDARD=17 && make -j$((nproc/4+1)) install || exit 1
+cmake ${DETECTOR_PREFIX}/${BEAMLINE_CONFIG} -DCMAKE_INSTALL_PREFIX=${LOCAL_PREFIX} -DCMAKE_CXX_STANDARD=17 && make -j$(($(nproc)/4+1)) install || exit 1
 popd
 rm -rf ${DETECTOR_PREFIX}/${BEAMLINE_CONFIG}_build
 
