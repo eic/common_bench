@@ -76,9 +76,9 @@ momenta_from_tracking(const std::vector<eic::TrackParametersData> &tracks,
                      return ROOT::Math::PxPyPzMVector{};
                    }
                    const double p = fabs(1. / track.qOverP);
-                   const double px = p * cos(track.direction.phi) * sin(track.direction.theta);
-                   const double py = p * sin(track.direction.phi) * sin(track.direction.theta);
-                   const double pz = p * cos(track.direction.theta);
+                   const double px = p * cos(track.phi) * sin(track.theta);
+                   const double py = p * sin(track.phi) * sin(track.theta);
+                   const double pz = p * cos(track.theta);
                    return ROOT::Math::PxPyPzMVector{px, py, pz, mass};
                  });
   return momenta;
