@@ -15,7 +15,7 @@
 
 #include <Math/Vector4D.h>
 
-#include "dd4pod/Geant4ParticleCollection.h"
+#include "edm4hep/MCParticleCollection.h"
 #include "eicd/TrackParametersCollection.h"
 #include "eicd/ReconstructedParticleCollection.h"
 #include "eicd/ReconstructedParticleData.h"
@@ -102,13 +102,13 @@ momenta_RC(const std::vector<eic::ReconstructedParticleData> &parts) {
  *  \TODO Add PID selector (maybe using ranges?)
  */
 inline auto
-momenta_from_simulation(const std::vector<dd4pod::Geant4ParticleData> &parts) {
+momenta_from_simulation(const std::vector<edm4hep::MCParticleData> &parts) {
   std::vector<ROOT::Math::PxPyPzMVector> momenta{parts.size()};
   // transform our simulation particle data into 4-momenta
   std::transform(parts.begin(), parts.end(), momenta.begin(),
                  [](const auto &part) {
-                   return ROOT::Math::PxPyPzMVector{part.ps.x, part.ps.y,
-                                                    part.ps.z, part.mass};
+                   return ROOT::Math::PxPyPzMVector{part.momentum.x, part.momentum.y,
+                                                    part.momentum.z, part.mass};
                  });
   return momenta;
 }
