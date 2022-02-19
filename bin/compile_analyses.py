@@ -2,7 +2,7 @@
 
 """
 Compile all root analysis scripts under
-benchmarks/<BENCHMARK>/analysis/*.cxx
+benchmarks/<BENCHMARK>/<DIR>/*.cxx
 
 Doing this step here rather than during the main benchmark script has
 multiple advantages:
@@ -13,11 +13,11 @@ multiple advantages:
        fail (this is probably an old bug in root...)
 
 Analysis scripts are expected to have extension 'cxx' and be located in the analysis
-subdirectory
+subdirectory (or directory specified as an argument)
 """
 
 ## Our analysis path and file extension for glob
-ANALYSIS_PATH=r'benchmarks/{}/analysis'
+ANALYSIS_PATH=r'benchmarks/{}/{}'
 ANALYSIS_EXT = r'cxx'
 
 import argparse
@@ -67,21 +67,24 @@ parser = argparse.ArgumentParser()
 parser.add_argument(
         'benchmark',
         help='A benchmarks for which to compile the analysis scripts.')
+parser.add_argument(
+        '--dir', action='store', default='analysis',
+        help='A directory in the benchmark to compile scripts in.')
 
-def compile_analyses(benchmark):
+def compile_analyses(benchmark,dir):
     '''Compile all analysis scripts for a benchmark.'''
-    print("Compiling all analyis scripts for '{}'".format(benchmark))
+    print("Compiling all analyis scripts for '{}'".format(benchmark,dir))
 
     ## Ensure our build directory exists
-    _init_build_dir(benchmark)
+    _init_build_dir(benchmark,dir)
 
     ## Get a list of all analysis scripts
-    _compile_all(benchmark)
+    _compile_all(benchmark,dir)
 
     ## All done!
     print('All analyses for', benchmark, 'compiled successfully')
 
-def _init_build_dir(benchmark):
+def _init_build_dir(benchmark,dir):
     '''Initialize our ROOT build directory (if using one).'''
     print(' --> Initializing ROOT build directory ...')
     build_prefix = os.getenv('ROOT_BUILD_DIR')
@@ -90,14 +93,14 @@ def _init_build_dir(benchmark):
         return
     ## deduce the root build directory
     pwd = os.getenv('PWD')
-    build_dir = '{}/{}/{}'.format(build_prefix, pwd, ANALYSIS_PATH.format(benchmark))
+    build_dir = '{}/{}/{}'.format(build_prefix, pwd, ANALYSIS_PATH.format(benchmark,dir))
     print("    --> Ensuring directory '{}' exists".format(build_dir))
     os.system('mkdir -p {}'.format(build_dir))
 
-def _compile_all(benchmark):
+def _compile_all(benchmark,dir):
     '''Compile all analysis for this benchmark.'''
     print(' --> Compiling analysis scripts')
-    anadir = Path(ANALYSIS_PATH.format(benchmark))
+    anadir = Path(ANALYSIS_PATH.format(benchmark,dir))
     if not anadir.exists():
         raise PathNotFoundError(anadir)
     ana_list = []
@@ -116,4 +119,4 @@ def _compile_cmd(file):
 
 if __name__ == "__main__":
     args = parser.parse_args()
-    compile_analyses(args.benchmark)
+    compile_analyses(args.benchmark,args.dir)
