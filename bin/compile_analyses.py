@@ -104,12 +104,19 @@ def _compile_all(benchmark,dir):
     if not anadir.exists():
         raise PathNotFoundError(anadir)
     ana_list = []
+    stored_e = None
     for file in anadir.glob('*.{}'.format(ANALYSIS_EXT)):
-        ana_list.append(file)
-        print('    --> Compiling:', file, flush=True)
-        err = os.system(_compile_cmd(file))
-        if err:
-            raise CompilationError(file)
+        try:
+            ana_list.append(file)
+            print('    --> Compiling:', file, flush=True)
+            err = os.system(_compile_cmd(file))
+            if err:
+                raise CompilationError(file)
+        except Exception as e:
+            stored_e = e
+            continue
+    if stored_e is not None:
+        raise stored_e
     if len(ana_list) == 0:
         raise NoAnalysesFoundError(anadir)
 
