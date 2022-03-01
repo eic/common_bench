@@ -65,7 +65,7 @@ inline double get_pdg_mass(std::string_view part) {
  * provided particle mass assumption. //outputTrackParameters
  */
 inline auto
-momenta_from_tracking(const std::vector<eic::TrackParametersData> &tracks,
+momenta_from_tracking(const std::vector<eicd::TrackParametersData> &tracks,
                       const double mass) {
   std::vector<ROOT::Math::PxPyPzMVector> momenta{tracks.size()};
   // transform our raw tracker info into proper 4-momenta
@@ -87,13 +87,13 @@ momenta_from_tracking(const std::vector<eic::TrackParametersData> &tracks,
 /** Helper to get momentum 4 vector.
  */
 inline auto
-momenta_RC(const std::vector<eic::ReconstructedParticleData> &parts) {
+momenta_RC(const std::vector<eicd::ReconstructedParticleData> &parts) {
   std::vector<ROOT::Math::PxPyPzMVector> momenta{parts.size()};
   // transform our raw tracker info into proper 4-momenta
   std::transform(parts.begin(), parts.end(), momenta.begin(),
                  [](const auto &part) {
-                   return ROOT::Math::PxPyPzMVector{part.p.x, part.p.y,
-                                                    part.p.z, part.mass};
+                   return ROOT::Math::PxPyPzMVector{part.momentum.x, part.momentum.y,
+                                                    part.momentum.z, part.mass};
                  });
   return momenta;
 }
