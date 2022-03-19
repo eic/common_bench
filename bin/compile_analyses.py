@@ -37,8 +37,8 @@ class PathNotFoundError(Exception):
         message: error message
     '''
     def __init__(self, path):
-        self.file = file
-        self.message = 'No such directory: {}'.format(file)
+        self.path = path
+        self.message = 'No such directory: {}'.format(path)
 class NoAnalysesFoundError(Exception):
     '''Did not find any analysis scripts to complile
 
@@ -47,8 +47,8 @@ class NoAnalysesFoundError(Exception):
         message: error message
     '''
     def __init__(self, path):
-        self.file = file
-        self.message = 'No analysis found (extension \'{}\' in path: {}'.format(file,
+        self.path = path
+        self.message = 'No analysis found (extension \'{}\' in path: {}'.format(path,
                 ANALYSIS_EXT)
 
 class CompilationError(Exception):
@@ -59,7 +59,8 @@ class CompilationError(Exception):
         path: analysis path
         message: error message
     '''
-    def __init__(self, file):
+    def __init__(self, path, file):
+        self.path = path
         self.file = file
         self.message = "Analysis '{}' failed to compile".format(file)
 
@@ -111,7 +112,7 @@ def _compile_all(benchmark,dir):
             print('    --> Compiling:', file, flush=True)
             err = os.system(_compile_cmd(file))
             if err:
-                raise CompilationError(file)
+                raise CompilationError(anadir, file)
         except Exception as e:
             stored_e = e
             continue
