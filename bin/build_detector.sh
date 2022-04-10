@@ -34,7 +34,13 @@ if [ -d "${JUGGLER_DETECTOR}" ]; then
   mv "${JUGGLER_DETECTOR}" "$(mktemp)-${JUGGLER_DETECTOR}"
 fi
 echo "Fetching ${JUGGLER_DETECTOR}"
-git clone -b ${JUGGLER_DETECTOR_VERSION} --depth 1 https://eicweb.phy.anl.gov/EIC/detectors/${JUGGLER_DETECTOR}.git
+if [ -n "${JUGGLER_DETECTOR_DEPLOY_TOKEN_USERNAME:-}" -a -n "${JUGGLER_DETECTOR_DEPLOY_TOKEN_PASSWORD:-}" ]; then
+  DEPLOY_TOKEN="${JUGGLER_DETECTOR_DEPLOY_TOKEN_USERNAME}:${JUGGLER_DETECTOR_DEPLOY_TOKEN_PASSWORD}@"
+else
+  DEPLOY_TOKEN=""
+fi
+echo "git clone -b ${JUGGLER_DETECTOR_VERSION} --depth 1 https://${DEPLOY_TOKEN}eicweb.phy.anl.gov/EIC/detectors/${JUGGLER_DETECTOR}.git"
+git clone -b ${JUGGLER_DETECTOR_VERSION} --depth 1 https://${DEPLOY_TOKEN}eicweb.phy.anl.gov/EIC/detectors/${JUGGLER_DETECTOR}.git
 [[ "$?" == "0" ]]  ||  exit 1
 rm -rf "${JUGGLER_DETECTOR}/.git"
 
@@ -45,8 +51,13 @@ if [ -d "${BEAMLINE_CONFIG}" ]; then
   mv "${BEAMLINE_CONFIG}" "$(mktemp)-${BEAMLINE_CONFIG}"
 fi
 echo "Fetching ${BEAMLINE_CONFIG}"
-echo "git clone -b ${BEAMLINE_CONFIG_VERSION} --depth 1 https://eicweb.phy.anl.gov/EIC/detectors/${BEAMLINE_CONFIG}.git"
-git clone -b ${BEAMLINE_CONFIG_VERSION} --depth 1 https://eicweb.phy.anl.gov/EIC/detectors/${BEAMLINE_CONFIG}.git
+if [ -n "${BEAMLINE_CONFIG_DEPLOY_TOKEN_USERNAME:-}" -a -n "${BEAMLINE_CONFIG_DEPLOY_TOKEN_PASSWORD:-}" ]; then
+  DEPLOY_TOKEN="${BEAMLINE_CONFIG_DEPLOY_TOKEN_USERNAME}:${BEAMLINE_CONFIG_DEPLOY_TOKEN_PASSWORD}@"
+else
+  DEPLOY_TOKEN=""
+fi
+echo "git clone -b ${BEAMLINE_CONFIG_VERSION} --depth 1 https://${DEPLOY_TOKEN}eicweb.phy.anl.gov/EIC/detectors/${BEAMLINE_CONFIG}.git"
+git clone -b ${BEAMLINE_CONFIG_VERSION} --depth 1 https://${DEPLOY_TOKEN}eicweb.phy.anl.gov/EIC/detectors/${BEAMLINE_CONFIG}.git
 [[ "$?" == "0" ]]  ||  exit 1
 rm -rf "${BEAMLINE_CONFIG}/.git"
 
