@@ -21,11 +21,12 @@
 ## Step 1: Process the command line arguments
 
 function print_the_help {
-  echo "USAGE:    --ebeam E --pbeam E --config C1 --decay D2"
+  echo "USAGE:    --ebeam E --pbeam E --minq2 Q2 --config C1 --decay D2"
   echo "          [--config C2 --decay D2 --decay D3 ...]"
   echo "REQUIRED ARGUMENTS:"
   echo "          --ebeam       Electron beam energy"
   echo "          --pbeam       Ion beam energy"
+  echo "          --minq2       Minimum momentum transfer"  
   echo "          --config      Generator configuration identifiers (at least one)"
   if [ ! -z ${REQUIRE_DECAY} ]; then
     echo "        --decay       Specific decay particle (e.g. muon)."
@@ -42,6 +43,7 @@ function print_the_help {
 ## Required variables
 EBEAM=
 PBEAM=
+MINQ2=
 DECAYS=
 CONFIG=
 
@@ -61,6 +63,11 @@ do
       ;;
     --pbeam)
       PBEAM="$2"
+      shift # past argument
+      shift # past value
+      ;;
+    --minq2)
+      MINQ2="$2"
       shift # past argument
       shift # past value
       ;;
@@ -97,6 +104,14 @@ elif [ -z $PBEAM ]; then
   echo "ERROR: PBEAM not defined: --pbeam <energy>"
   print_the_help
   exit 1
+elif [ -z $MINQ2 ] && [ ! -z $REQUIRE_MINQ2 ]; then
+  echo "ERROR: MINQ2 not defined: --minq2 <energy>"
+  print_the_help
+  exit 1
+elif [ -z $MINQ2 ] && [ -z $REQUIRE_MINQ2 ]; then
+  echo "ERROR: MINQ2 flag specified but not required"
+  print_the_help
+  exit 1
 elif [ -z $LEADING ] && [ ! -z $REQUIRE_LEADING ]; then
   echo "ERROR: LEADING not defined: --leading <channel>"
   print_the_help
@@ -119,6 +134,9 @@ fi
 export CONFIG
 export EBEAM
 export PBEAM
+if [ ! -z $REQUIRE_MINQ2 ]; then
+  export MINQ2
+fi
 if [ ! -z $REQUIRE_LEADING ]; then
   export LEADING
 fi
