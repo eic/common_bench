@@ -108,7 +108,7 @@ elif [ -z $MINQ2 ] && [ ! -z $REQUIRE_MINQ2 ]; then
   echo "ERROR: MINQ2 not defined: --minq2 <energy>"
   print_the_help
   exit 1
-elif [ -z $MINQ2 ] && [ -z $REQUIRE_MINQ2 ]; then
+elif [ ! -z $MINQ2 ] && [ -z $REQUIRE_MINQ2 ]; then
   echo "ERROR: MINQ2 flag specified but not required"
   print_the_help
   exit 1
