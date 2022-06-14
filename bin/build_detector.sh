@@ -43,6 +43,9 @@ fi
 echo "git clone -b ${JUGGLER_DETECTOR_VERSION} --depth 1 https://eicweb.phy.anl.gov/EIC/detectors/${JUGGLER_DETECTOR}.git"
 git clone -b ${JUGGLER_DETECTOR_VERSION} --depth 1 https://${DEPLOY_TOKEN}eicweb.phy.anl.gov/EIC/detectors/${JUGGLER_DETECTOR}.git
 [[ "$?" == "0" ]]  ||  exit 1
+if [ -f "${JUGGLER_DETECTOR}/requirements.txt" ] ; then
+  python -m pip install -r ${JUGGLER_DETECTOR}/requirements.txt
+fi
 rm -rf "${JUGGLER_DETECTOR}/.git"
 
 ## We need an up-to-date copy of the detector
