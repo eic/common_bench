@@ -8,13 +8,14 @@
 ##  - BEAMLINE_CONFIG:         compact detector files for the interaciton point beamline
 ##  - BEAMLINE_CONFIG_VERSION: compact detector files for the interaciton point beamline
 ##  - JUGGLER_DETECTOR:        detector package to be used for the benchmark
-##  - JUGGLER_DETECTOR_VERISON:        detector package to be used for the benchmark
+##  - JUGGLER_DETECTOR_CONFIG: detector package config to be used for the benchmark
+##  - JUGGLER_DETECTOR_VERSION:        detector package to be used for the benchmark
 ##  - JUGGLER_N_EVENTS:        events processed by simulation/reconstruction
 ##  - JUGGLER_INSTALL_PREFIX:  location where Juggler (digi/recon) is installed
 ##  - JUGGLER_N_THREADS:       Number of threads/processes to spawn in parallel
 ##  - JUGGLER_RNG_SEED:        Random seed for the RNG
 ##
-## It also defines the following additional variables for internal usage
+## It also defines the following additional variables for internally usage
 ##  - LOCAL_PREFIX:           prefix for packages installed during the benchmark
 ##  - LOCAL_DATA_PATH:        local storage for pipeline jobs
 ##  - DETECTOR_PREFIX:        prefix for the detector definitions
@@ -44,6 +45,10 @@ fi
 ## Detector package to be used during the benchmark process
 if [ ! -n  "${JUGGLER_DETECTOR}" ] ; then 
   export JUGGLER_DETECTOR="athena"
+fi
+
+if [ ! -n  "${JUGGLER_DETECTOR_CONFIG}" ] ; then
+  export JUGGLER_DETECTOR_CONFIG="athena"
 fi
 
 if [ ! -n  "${JUGGLER_DETECTOR_VERSION}" ] ; then 
@@ -118,6 +123,7 @@ export ROOT_BUILD_DIR=$LOCAL_PREFIX/root_build
 export ROOT_INCLUDE_PATH=${LOCAL_PREFIX}/include:${ROOT_INCLUDE_PATH}
 
 echo "JUGGLER_DETECTOR:           ${JUGGLER_DETECTOR}"
+echo "JUGGLER_DETECTOR_CONFIG:    ${JUGGLER_DETECTOR_CONFIG}"
 echo "JUGGLER_DETECTOR_VERSION:   ${JUGGLER_DETECTOR_VERSION}"
 echo "JUGGLER_N_EVENTS:           ${JUGGLER_N_EVENTS}"
 echo "JUGGLER_N_THREADS:          ${JUGGLER_N_THREADS}"

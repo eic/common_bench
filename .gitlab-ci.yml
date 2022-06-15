@@ -76,21 +76,11 @@ detector_benchmarks:
   needs: ["common:variables"]
   variables:
     JUGGLER_DETECTOR: "athena"
+    JUGGLER_DETECTOR_CONFIG: "athena"
     COMMON_BENCH_VERSION: "$COMMON_BENCH_VERSION"
   trigger:
     project: EIC/benchmarks/detector_benchmarks
     strategy: depend
-
-    #physics_benchmarks:
-    #  stage: benchmarks
-    #  needs: ["common:variables"]
-    #  variables:
-    #    JUGGLER_DETECTOR: "athena"
-    #    COMMON_BENCH_VERSION: "$COMMON_BENCH_VERSION"
-    #  trigger:
-    #    project: EIC/benchmarks/physics_benchmarks
-    #    strategy: depend
-
 
 pages:
   image: eicweb.phy.anl.gov:4567/containers/eic_container/alpine
