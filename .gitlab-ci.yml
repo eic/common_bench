@@ -75,12 +75,23 @@ detector_benchmarks:
     - if: '$CI_SERVER_HOST == "eicweb.phy.anl.gov"' 
   needs: ["common:variables"]
   variables:
-    JUGGLER_DETECTOR: "athena"
-    JUGGLER_DETECTOR_CONFIG: "athena"
+    JUGGLER_DETECTOR: "ecce"
+    JUGGLER_DETECTOR_CONFIG: "ecce"
     COMMON_BENCH_VERSION: "$COMMON_BENCH_VERSION"
   trigger:
     project: EIC/benchmarks/detector_benchmarks
     strategy: depend
+  parallel:
+    matrix:
+      - JUGGLER_DETECTOR: 'athena'
+        JUGGLER_DETECTOR_CONFIG: 'athena'
+        JUGGLER_DETECTOR_VERSION: 'master'
+      - JUGGLER_DETECTOR: 'ecce'
+        JUGGLER_DETECTOR_CONFIG: 'ecce_imaging'
+        JUGGLER_DETECTOR_VERSION: 'main'
+      - JUGGLER_DETECTOR: 'ecce'
+        JUGGLER_DETECTOR_CONFIG: 'ecce_sciglass'
+        JUGGLER_DETECTOR_VERSION: 'main'
 
 pages:
   image: eicweb.phy.anl.gov:4567/containers/eic_container/alpine

@@ -44,7 +44,7 @@ fi
 
 ## Detector package to be used during the benchmark process
 if [ ! -n  "${JUGGLER_DETECTOR}" ] ; then 
-  export JUGGLER_DETECTOR="athena"
+  export JUGGLER_DETECTOR="ecce"
 fi
 
 if [ ! -n  "${JUGGLER_DETECTOR_CONFIG}" ] ; then
@@ -52,7 +52,7 @@ if [ ! -n  "${JUGGLER_DETECTOR_CONFIG}" ] ; then
 fi
 
 if [ ! -n  "${JUGGLER_DETECTOR_VERSION}" ] ; then 
-  export JUGGLER_DETECTOR_VERSION="master"
+  export JUGGLER_DETECTOR_VERSION="main"
 fi
 
 
