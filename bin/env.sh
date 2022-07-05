@@ -48,7 +48,7 @@ if [ ! -n  "${JUGGLER_DETECTOR}" ] ; then
 fi
 
 if [ ! -n  "${JUGGLER_DETECTOR_CONFIG}" ] ; then
-  export JUGGLER_DETECTOR_CONFIG="ecce"
+  export JUGGLER_DETECTOR_CONFIG="${JUGGLER_DETECTOR}"
 fi
 
 if [ ! -n  "${JUGGLER_DETECTOR_VERSION}" ] ; then 
