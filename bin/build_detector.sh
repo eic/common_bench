@@ -40,9 +40,8 @@ if [ -n "${JUGGLER_DETECTOR_DEPLOY_TOKEN_USERNAME:-}" -a -n "${JUGGLER_DETECTOR_
 else
   DEPLOY_TOKEN=""
 fi
-echo "git clone -b ${JUGGLER_DETECTOR_VERSION} --depth 1 https://eicweb.phy.anl.gov/EIC/detectors/${JUGGLER_DETECTOR}.git"
-git clone -b ${JUGGLER_DETECTOR_VERSION} --depth 1 https://${DEPLOY_TOKEN}eicweb.phy.anl.gov/EIC/detectors/${JUGGLER_DETECTOR}.git
-[[ "$?" == "0" ]]  ||  exit 1
+echo "git clone -b ${JUGGLER_DETECTOR_VERSION} --depth 1 ${JUGGLER_DETECTOR_REPOSITORYURL:-https://eicweb.phy.anl.gov/EIC/detectors/${JUGGLER_DETECTOR}.git}"
+git clone -b ${JUGGLER_DETECTOR_VERSION} --depth 1 ${JUGGLER_DETECTOR_REPOSITORYURL:-https://${DEPLOY_TOKEN}eicweb.phy.anl.gov/EIC/detectors/${JUGGLER_DETECTOR}.git}
 if [ -f "${JUGGLER_DETECTOR}/requirements.txt" ] ; then
   python -m pip install -r ${JUGGLER_DETECTOR}/requirements.txt
 fi
@@ -61,8 +60,8 @@ if [ -n "${BEAMLINE_CONFIG_DEPLOY_TOKEN_USERNAME:-}" -a -n "${BEAMLINE_CONFIG_DE
 else
   DEPLOY_TOKEN=""
 fi
-echo "git clone -b ${BEAMLINE_CONFIG_VERSION} --depth 1 https://eicweb.phy.anl.gov/EIC/detectors/${BEAMLINE_CONFIG}.git"
-git clone -b ${BEAMLINE_CONFIG_VERSION} --depth 1 https://${DEPLOY_TOKEN}eicweb.phy.anl.gov/EIC/detectors/${BEAMLINE_CONFIG}.git
+echo "git clone -b ${BEAMLINE_CONFIG_VERSION} --depth 1 ${BEAMLINE_REPOSITORYURL:-https://eicweb.phy.anl.gov/EIC/detectors/${BEAMLINE_CONFIG}.git}"
+git clone -b ${BEAMLINE_CONFIG_VERSION} --depth 1 ${BEAMLINE_REPOSITORYURL:-https://${DEPLOY_TOKEN}eicweb.phy.anl.gov/EIC/detectors/${BEAMLINE_CONFIG}.git}
 [[ "$?" == "0" ]]  ||  exit 1
 rm -rf "${BEAMLINE_CONFIG}/.git"
 
