@@ -43,6 +43,20 @@ fi
 
 
 ## Detector package to be used during the benchmark process
+if [ ! -n  "${DETECTOR}" ] ; then 
+  export DETECTOR="ecce"
+fi
+
+if [ ! -n  "${DETECTOR_CONFIG}" ] ; then
+  export DETECTOR_CONFIG="${DETECTOR}"
+fi
+
+if [ ! -n  "${DETECTOR_VERSION}" ] ; then 
+  export DETECTOR_VERSION="main"
+fi
+
+
+## Detector package to be used during the benchmark process
 if [ ! -n  "${JUGGLER_DETECTOR}" ] ; then 
   export JUGGLER_DETECTOR="ecce"
 fi
