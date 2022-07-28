@@ -1,19 +1,19 @@
 #!/bin/bash
 
 ## =============================================================================
-## Build and install the JUGGLER_DETECTOR detector package into our local prefix
+## Build and install the DETECTOR detector package into our local prefix
 ## =============================================================================
 
 ## =============================================================================
 ## Load the environment variables. To build the detector we need the following
 ## variables:
 ##
-## - JUGGLER_DETECTOR: the detector package we want to use for this benchmark
+## - DETECTOR: the detector package we want to use for this benchmark
 ## - LOCAL_PREFIX:     location where local packages should be installed
 ## - LOCAL_DATA_PATH:  local storage for pipeline jobs
 ## - DETECTOR_PREFIX:  prefix for the detector definitions 
 ## - DETECTOR_PATH:    full path for the detector definitions
-##                     this is the same as ${DETECTOR_PREFIX}/${JUGGLER_DETECTOR}
+##                     this is the same as ${DETECTOR_PREFIX}/${DETECTOR}
 
 if [ -n "${LOCAL_PREFIX}" ] ; then 
   source .local/bin/env.sh
@@ -29,23 +29,23 @@ pushd ${DETECTOR_PREFIX}
 ## We need an up-to-date copy of the detector
 ## start clean to avoid issues...
 
-if [ -d "${JUGGLER_DETECTOR}" ]; then
-  echo "cleaning up ${JUGGLER_DETECTOR}" 
-  mv "${JUGGLER_DETECTOR}" "$(mktemp)-${JUGGLER_DETECTOR}"
+if [ -d "${DETECTOR}" ]; then
+  echo "cleaning up ${DETECTOR}" 
+  mv "${DETECTOR}" "$(mktemp)-${DETECTOR}"
 fi
-echo "Fetching ${JUGGLER_DETECTOR}"
-if [ -n "${JUGGLER_DETECTOR_DEPLOY_TOKEN_USERNAME:-}" -a -n "${JUGGLER_DETECTOR_DEPLOY_TOKEN_PASSWORD:-}" ]; then
-  DEPLOY_TOKEN="${JUGGLER_DETECTOR_DEPLOY_TOKEN_USERNAME}:${JUGGLER_DETECTOR_DEPLOY_TOKEN_PASSWORD}@"
-  echo "Deploy token for ${JUGGLER_DETECTOR_DEPLOY_TOKEN_USERNAME} is masked in the next line."
+echo "Fetching ${DETECTOR}"
+if [ -n "${DETECTOR_DEPLOY_TOKEN_USERNAME:-}" -a -n "${DETECTOR_DEPLOY_TOKEN_PASSWORD:-}" ]; then
+  DEPLOY_TOKEN="${DETECTOR_DEPLOY_TOKEN_USERNAME}:${DETECTOR_DEPLOY_TOKEN_PASSWORD}@"
+  echo "Deploy token for ${DETECTOR_DEPLOY_TOKEN_USERNAME} is masked in the next line."
 else
   DEPLOY_TOKEN=""
 fi
-echo "git clone -b ${JUGGLER_DETECTOR_VERSION} --depth 1 ${JUGGLER_DETECTOR_REPOSITORYURL:-https://eicweb.phy.anl.gov/EIC/detectors/${JUGGLER_DETECTOR}.git}"
-git clone -b ${JUGGLER_DETECTOR_VERSION} --depth 1 ${JUGGLER_DETECTOR_REPOSITORYURL:-https://${DEPLOY_TOKEN}eicweb.phy.anl.gov/EIC/detectors/${JUGGLER_DETECTOR}.git}
-if [ -f "${JUGGLER_DETECTOR}/requirements.txt" ] ; then
-  python -m pip install -r ${JUGGLER_DETECTOR}/requirements.txt
+echo "git clone -b ${DETECTOR_VERSION} --depth 1 ${DETECTOR_REPOSITORYURL:-https://eicweb.phy.anl.gov/EIC/detectors/${DETECTOR}.git}"
+git clone -b ${DETECTOR_VERSION} --depth 1 ${DETECTOR_REPOSITORYURL:-https://${DEPLOY_TOKEN}eicweb.phy.anl.gov/EIC/detectors/${DETECTOR}.git}
+if [ -f "${DETECTOR}/requirements.txt" ] ; then
+  python -m pip install -r ${DETECTOR}/requirements.txt
 fi
-rm -rf "${JUGGLER_DETECTOR}/.git"
+rm -rf "${DETECTOR}/.git"
 
 ## We need an up-to-date copy of the detector
 ## start clean to avoid issues...
@@ -86,13 +86,13 @@ ln -s -f ${DETECTOR_PREFIX}/${BEAMLINE_CONFIG}/${BEAMLINE_CONFIG} ${DETECTOR_PAT
 popd
 ## =============================================================================
 ## Step 2: Compile and install the detector definition
-echo "Building and installing the ${JUGGLER_DETECTOR} package"
+echo "Building and installing the ${DETECTOR} package"
 
-mkdir -p ${DETECTOR_PREFIX}/${JUGGLER_DETECTOR}_build
-pushd ${DETECTOR_PREFIX}/${JUGGLER_DETECTOR}_build
+mkdir -p ${DETECTOR_PREFIX}/${DETECTOR}_build
+pushd ${DETECTOR_PREFIX}/${DETECTOR}_build
 cmake ${DETECTOR_PATH} -DCMAKE_INSTALL_PREFIX=${LOCAL_PREFIX} -DCMAKE_CXX_STANDARD=17 && make -j$(($(nproc)/4+1)) install || exit 1
 popd
-rm -rf ${DETECTOR_PREFIX}/${JUGGLER_DETECTOR}_build
+rm -rf ${DETECTOR_PREFIX}/${DETECTOR}_build
 
 mkdir -p ${DETECTOR_PREFIX}/${BEAMLINE_CONFIG}_build
 pushd ${DETECTOR_PREFIX}/${BEAMLINE_CONFIG}_build

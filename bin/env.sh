@@ -7,9 +7,9 @@
 ##
 ##  - BEAMLINE_CONFIG:         compact detector files for the interaciton point beamline
 ##  - BEAMLINE_CONFIG_VERSION: compact detector files for the interaciton point beamline
-##  - JUGGLER_DETECTOR:        detector package to be used for the benchmark
-##  - JUGGLER_DETECTOR_CONFIG: detector package config to be used for the benchmark
-##  - JUGGLER_DETECTOR_VERSION:        detector package to be used for the benchmark
+##  - DETECTOR:        detector package to be used for the benchmark
+##  - DETECTOR_CONFIG: detector package config to be used for the benchmark
+##  - DETECTOR_VERSION:        detector package to be used for the benchmark
 ##  - JUGGLER_N_EVENTS:        events processed by simulation/reconstruction
 ##  - JUGGLER_INSTALL_PREFIX:  location where Juggler (digi/recon) is installed
 ##  - JUGGLER_N_THREADS:       Number of threads/processes to spawn in parallel
@@ -53,20 +53,6 @@ fi
 
 if [ ! -n  "${DETECTOR_VERSION}" ] ; then 
   export DETECTOR_VERSION="main"
-fi
-
-
-## Detector package to be used during the benchmark process
-if [ ! -n  "${JUGGLER_DETECTOR}" ] ; then 
-  export JUGGLER_DETECTOR="ecce"
-fi
-
-if [ ! -n  "${JUGGLER_DETECTOR_CONFIG}" ] ; then
-  export JUGGLER_DETECTOR_CONFIG="${JUGGLER_DETECTOR}"
-fi
-
-if [ ! -n  "${JUGGLER_DETECTOR_VERSION}" ] ; then 
-  export JUGGLER_DETECTOR_VERSION="main"
 fi
 
 
@@ -129,16 +115,16 @@ export DETECTOR_PREFIX="${LOCAL_PREFIX}/detector"
 mkdir -p ${DETECTOR_PREFIX}
 
 ## detector path: actual detector definition path
-export DETECTOR_PATH="${DETECTOR_PREFIX}/${JUGGLER_DETECTOR}"
+export DETECTOR_PATH="${DETECTOR_PREFIX}/${DETECTOR}"
 
 ## build dir for ROOT to put its binaries etc.
 export ROOT_BUILD_DIR=$LOCAL_PREFIX/root_build
 
 export ROOT_INCLUDE_PATH=${LOCAL_PREFIX}/include:${ROOT_INCLUDE_PATH}
 
-echo "JUGGLER_DETECTOR:           ${JUGGLER_DETECTOR}"
-echo "JUGGLER_DETECTOR_CONFIG:    ${JUGGLER_DETECTOR_CONFIG}"
-echo "JUGGLER_DETECTOR_VERSION:   ${JUGGLER_DETECTOR_VERSION}"
+echo "DETECTOR:           ${DETECTOR}"
+echo "DETECTOR_CONFIG:    ${DETECTOR_CONFIG}"
+echo "DETECTOR_VERSION:   ${DETECTOR_VERSION}"
 echo "JUGGLER_N_EVENTS:           ${JUGGLER_N_EVENTS}"
 echo "JUGGLER_N_THREADS:          ${JUGGLER_N_THREADS}"
 echo "JUGGLER_RNG_SEED:           ${JUGGLER_RNG_SEED}"
