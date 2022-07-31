@@ -41,6 +41,10 @@ if [ ! -n  "${BEAMLINE_CONFIG_VERSION}" ] ; then
   export BEAMLINE_CONFIG_VERSION="master"
 fi
 
+if [ ! -n  "${BEAMLINE_REPOSITORYURL}" ] ; then 
+  export BEAMLINE_REPOSITORYURL="https://github.com/eic/${BEAMLINE_CONFIG}.git"
+fi
+
 
 ## Detector package to be used during the benchmark process
 if [ ! -n  "${DETECTOR}" ] ; then 

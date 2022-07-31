@@ -75,8 +75,6 @@ detector_benchmarks:
     - if: '$CI_SERVER_HOST == "eicweb.phy.anl.gov"' 
   needs: ["common:variables"]
   variables:
-    DETECTOR: "epic"
-    DETECTOR_CONFIG: "epic"
     COMMON_BENCH_VERSION: "$COMMON_BENCH_VERSION"
   trigger:
     project: EIC/benchmarks/detector_benchmarks
