@@ -75,8 +75,8 @@ detector_benchmarks:
     - if: '$CI_SERVER_HOST == "eicweb.phy.anl.gov"' 
   needs: ["common:variables"]
   variables:
-    DETECTOR: "ecce"
-    DETECTOR_CONFIG: "ecce"
+    DETECTOR: "epic"
+    DETECTOR_CONFIG: "epic"
     COMMON_BENCH_VERSION: "$COMMON_BENCH_VERSION"
   trigger:
     project: EIC/benchmarks/detector_benchmarks
@@ -86,12 +86,15 @@ detector_benchmarks:
       - DETECTOR: 'athena'
         DETECTOR_CONFIG: 'athena'
         DETECTOR_VERSION: 'master'
-      - DETECTOR: 'ecce'
-        DETECTOR_CONFIG: 'ecce_imaging'
+        DETECTOR_REPOSITORYURL: 'https://eicweb.phy.anl.gov/EIC/detectors/athena.git'
+      - DETECTOR: 'epic'
+        DETECTOR_CONFIG: 'epic_imaging'
         DETECTOR_VERSION: 'main'
-      - DETECTOR: 'ecce'
-        DETECTOR_CONFIG: 'ecce_sciglass'
+        DETECTOR_REPOSITORYURL: 'https://github.com/eic/epic.git'
+      - DETECTOR: 'epic'
+        DETECTOR_CONFIG: 'epic_sciglass'
         DETECTOR_VERSION: 'main'
+        DETECTOR_REPOSITORYURL: 'https://github.com/eic/epic.git'
 
 pages:
   image: eicweb.phy.anl.gov:4567/containers/eic_container/alpine
