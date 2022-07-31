@@ -40,8 +40,8 @@ if [ -n "${DETECTOR_DEPLOY_TOKEN_USERNAME:-}" -a -n "${DETECTOR_DEPLOY_TOKEN_PAS
 else
   DEPLOY_TOKEN=""
 fi
-echo "git clone -b ${DETECTOR_VERSION} --depth 1 ${DETECTOR_REPOSITORYURL:-https://eicweb.phy.anl.gov/EIC/detectors/${DETECTOR}.git}"
-git clone -b ${DETECTOR_VERSION} --depth 1 ${DETECTOR_REPOSITORYURL:-https://${DEPLOY_TOKEN}eicweb.phy.anl.gov/EIC/detectors/${DETECTOR}.git}
+echo "git clone -b ${DETECTOR_VERSION} --depth 1 ${DETECTOR_REPOSITORYURL:-https://eicweb.phy.anl.gov/EIC/detectors/${DETECTOR}.git} ${DETECTOR}"
+git clone -b ${DETECTOR_VERSION} --depth 1 ${DETECTOR_REPOSITORYURL:-https://${DEPLOY_TOKEN}eicweb.phy.anl.gov/EIC/detectors/${DETECTOR}.git} ${DETECTOR}
 if [ -f "${DETECTOR}/requirements.txt" ] ; then
   python -m pip install -r ${DETECTOR}/requirements.txt
 fi
@@ -60,8 +60,8 @@ if [ -n "${BEAMLINE_CONFIG_DEPLOY_TOKEN_USERNAME:-}" -a -n "${BEAMLINE_CONFIG_DE
 else
   DEPLOY_TOKEN=""
 fi
-echo "git clone -b ${BEAMLINE_CONFIG_VERSION} --depth 1 ${BEAMLINE_REPOSITORYURL:-https://eicweb.phy.anl.gov/EIC/detectors/${BEAMLINE_CONFIG}.git}"
-git clone -b ${BEAMLINE_CONFIG_VERSION} --depth 1 ${BEAMLINE_REPOSITORYURL:-https://${DEPLOY_TOKEN}eicweb.phy.anl.gov/EIC/detectors/${BEAMLINE_CONFIG}.git}
+echo "git clone -b ${BEAMLINE_CONFIG_VERSION} --depth 1 ${BEAMLINE_REPOSITORYURL:-https://eicweb.phy.anl.gov/EIC/detectors/${BEAMLINE_CONFIG}.git} ${BEAMLINE_CONFIG}"
+git clone -b ${BEAMLINE_CONFIG_VERSION} --depth 1 ${BEAMLINE_REPOSITORYURL:-https://${DEPLOY_TOKEN}eicweb.phy.anl.gov/EIC/detectors/${BEAMLINE_CONFIG}.git} ${BEAMLINE_CONFIG}
 [[ "$?" == "0" ]]  ||  exit 1
 rm -rf "${BEAMLINE_CONFIG}/.git"
 
