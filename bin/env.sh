@@ -44,7 +44,7 @@ fi
 
 ## Detector package to be used during the benchmark process
 if [ ! -n  "${DETECTOR}" ] ; then 
-  export DETECTOR="ecce"
+  export DETECTOR="epic"
 fi
 
 if [ ! -n  "${DETECTOR_CONFIG}" ] ; then
@@ -55,6 +55,9 @@ if [ ! -n  "${DETECTOR_VERSION}" ] ; then
   export DETECTOR_VERSION="main"
 fi
 
+if [ ! -n  "${DETECTOR_REPOSITORYURL}" ] ; then
+  export DETECTOR_REPOSITORYURL="https://github.com/eic/${DETECTOR}.git"
+fi
 
 ## Number of events that will be processed by the reconstruction
 if [ ! -n  "${JUGGLER_N_EVENTS}" ] ; then 
