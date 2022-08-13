@@ -118,6 +118,7 @@ export DETECTOR_PREFIX="${LOCAL_PREFIX}/detector"
 mkdir -p ${DETECTOR_PREFIX}
 
 ## detector path: actual detector definition path
+export BEAMLINE_PATH="${DETECTOR_PREFIX}/${BEAMLINE_CONFIG}"
 export DETECTOR_PATH="${DETECTOR_PREFIX}/${DETECTOR}"
 
 ## build dir for ROOT to put its binaries etc.
