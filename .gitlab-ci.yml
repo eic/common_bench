@@ -81,10 +81,6 @@ detector_benchmarks:
     strategy: depend
   parallel:
     matrix:
-      - DETECTOR: 'athena'
-        DETECTOR_CONFIG: 'athena'
-        DETECTOR_VERSION: 'master'
-        DETECTOR_REPOSITORYURL: 'https://eicweb.phy.anl.gov/EIC/detectors/athena.git'
       - DETECTOR: 'epic'
         DETECTOR_CONFIG: 'epic_imaging'
         DETECTOR_VERSION: 'main'
