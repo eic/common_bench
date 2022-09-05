@@ -130,9 +130,13 @@ export ROOT_BUILD_DIR=$LOCAL_PREFIX/root_build
 
 export ROOT_INCLUDE_PATH=${LOCAL_PREFIX}/include:${ROOT_INCLUDE_PATH}
 
-echo "DETECTOR:           ${DETECTOR}"
-echo "DETECTOR_CONFIG:    ${DETECTOR_CONFIG}"
-echo "DETECTOR_VERSION:   ${DETECTOR_VERSION}"
+echo "BEAMLINE_CONFIG:            ${BEAMLINE_CONFIG}"
+echo "BEAMLINE_CONFIG_VERSION:    ${BEAMLINE_CONFIG_VERSION}"
+echo "BEAMLINE_REPOSITORYURL:     ${BEAMLINE_REPOSITORYURL}"
+echo "DETECTOR:                   ${DETECTOR}"
+echo "DETECTOR_CONFIG:            ${DETECTOR_CONFIG}"
+echo "DETECTOR_VERSION:           ${DETECTOR_VERSION}"
+echo "DETECTOR_REPOSITORYURL:     ${DETECTOR_REPOSITORYURL}"
 echo "JUGGLER_N_EVENTS:           ${JUGGLER_N_EVENTS}"
 echo "JUGGLER_N_THREADS:          ${JUGGLER_N_THREADS}"
 echo "JUGGLER_RNG_SEED:           ${JUGGLER_RNG_SEED}"
@@ -142,8 +146,6 @@ echo "DETECTOR_PREFIX:            ${DETECTOR_PREFIX}"
 echo "DETECTOR_PATH:              ${DETECTOR_PATH}"
 echo "ROOT_BUILD_DIR:             ${ROOT_BUILD_DIR}"
 echo "ROOT_INCLUDE_PATH:          ${ROOT_INCLUDE_PATH}"
-echo "BEAMLINE_CONFIG:            ${BEAMLINE_CONFIG}"
-echo "BEAMLINE_CONFIG_VERSION:    ${BEAMLINE_CONFIG_VERSION}"
 echo "LOCAL_DATA_PATH:            ${LOCAL_DATA_PATH}"
 
 ## =============================================================================
