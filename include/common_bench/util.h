@@ -16,9 +16,9 @@
 #include <Math/Vector4D.h>
 
 #include "edm4hep/MCParticleCollection.h"
-#include "eicd/TrackParametersCollection.h"
-#include "eicd/ReconstructedParticleCollection.h"
-#include "eicd/ReconstructedParticleData.h"
+#include "edm4eic/TrackParametersCollection.h"
+#include "edm4eic/ReconstructedParticleCollection.h"
+#include "edm4eic/ReconstructedParticleData.h"
 
 namespace common_bench {
 
@@ -65,7 +65,7 @@ inline double get_pdg_mass(std::string_view part) {
  * provided particle mass assumption. //outputTrackParameters
  */
 inline auto
-momenta_from_tracking(const std::vector<eicd::TrackParametersData> &tracks,
+momenta_from_tracking(const std::vector<edm4eic::TrackParametersData> &tracks,
                       const double mass) {
   std::vector<ROOT::Math::PxPyPzMVector> momenta{tracks.size()};
   // transform our raw tracker info into proper 4-momenta
@@ -87,7 +87,7 @@ momenta_from_tracking(const std::vector<eicd::TrackParametersData> &tracks,
 /** Helper to get momentum 4 vector.
  */
 inline auto
-momenta_RC(const std::vector<eicd::ReconstructedParticleData> &parts) {
+momenta_RC(const std::vector<edm4eic::ReconstructedParticleData> &parts) {
   std::vector<ROOT::Math::PxPyPzMVector> momenta{parts.size()};
   // transform our raw tracker info into proper 4-momenta
   std::transform(parts.begin(), parts.end(), momenta.begin(),
