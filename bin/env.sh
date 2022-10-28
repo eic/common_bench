@@ -52,7 +52,7 @@ if [ ! -n  "${DETECTOR}" ] ; then
 fi
 
 if [ ! -n  "${DETECTOR_CONFIG}" ] ; then
-  export DETECTOR_CONFIG="${DETECTOR}"
+  export DETECTOR_CONFIG="${DETECTOR}_full"
 fi
 
 if [ ! -n  "${DETECTOR_VERSION}" ] ; then 
