@@ -47,42 +47,6 @@ if [ -f "${DETECTOR}/requirements.txt" ] ; then
 fi
 rm -rf "${DETECTOR}/.git"
 
-## We need an up-to-date copy of the detector
-## start clean to avoid issues...
-if [ -d "${BEAMLINE_CONFIG}" ]; then
-  echo "cleaning up ${BEAMLINE_CONFIG}" 
-  mv "${BEAMLINE_CONFIG}" "$(mktemp)-${BEAMLINE_CONFIG}"
-fi
-echo "Fetching ${BEAMLINE_CONFIG}"
-if [ -n "${BEAMLINE_CONFIG_DEPLOY_TOKEN_USERNAME:-}" -a -n "${BEAMLINE_CONFIG_DEPLOY_TOKEN_PASSWORD:-}" ]; then
-  DEPLOY_TOKEN="${BEAMLINE_CONFIG_DEPLOY_TOKEN_USERNAME}:${BEAMLINE_CONFIG_DEPLOY_TOKEN_PASSWORD}@"
-  echo "Deploy token for ${BEAMLINE_CONFIG_DEPLOY_TOKEN_USERNAME} is masked in the next line."
-else
-  DEPLOY_TOKEN=""
-fi
-echo "git clone -b ${BEAMLINE_CONFIG_VERSION} --depth 1 ${BEAMLINE_REPOSITORYURL:-https://eicweb.phy.anl.gov/EIC/detectors/${BEAMLINE_CONFIG}.git} ${BEAMLINE_CONFIG}"
-git clone -b ${BEAMLINE_CONFIG_VERSION} --depth 1 ${BEAMLINE_REPOSITORYURL:-https://${DEPLOY_TOKEN}eicweb.phy.anl.gov/EIC/detectors/${BEAMLINE_CONFIG}.git} ${BEAMLINE_CONFIG}
-[[ "$?" == "0" ]]  ||  exit 1
-rm -rf "${BEAMLINE_CONFIG}/.git"
-
-## We also need an up-to-date copy of the accelerator. For now this is done
-## manually. Down the road we could maybe automize this with cmake
-if [ -d accelerator ]; then
-  echo "cleaning up accelerator"
-  mv "accelerator" "$(mktemp)-accelerator"
-fi
-echo "Fetching accelerator"
-git clone --depth 1 https://eicweb.phy.anl.gov/EIC/detectors/accelerator.git
-[[ "$?" == "0" ]]  ||  exit 1
-rm -rf "accelerator/.git"
-
-## Now symlink the accelerator definition into the detector definition
-echo "Linking accelerator definition into detector definition"
-ln -s -f ${DETECTOR_PREFIX}/accelerator/eic ${DETECTOR_PATH}/eic
-[[ "$?" == "0" ]]  ||  exit 1
-ln -s -f ${DETECTOR_PREFIX}/${BEAMLINE_CONFIG}/${BEAMLINE_CONFIG} ${DETECTOR_PATH}/${BEAMLINE_CONFIG}
-[[ "$?" == "0" ]]  ||  exit 1
-
 popd
 ## =============================================================================
 ## Step 2: Compile and install the detector definition
@@ -93,14 +57,6 @@ pushd ${DETECTOR_PREFIX}/${DETECTOR}_build
 cmake ${DETECTOR_PATH} -DCMAKE_INSTALL_PREFIX=${LOCAL_PREFIX} -DCMAKE_CXX_STANDARD=17 && make -j$(($(nproc)/4+1)) install || exit 1
 popd
 rm -rf ${DETECTOR_PREFIX}/${DETECTOR}_build
-
-mkdir -p ${DETECTOR_PREFIX}/${BEAMLINE_CONFIG}_build
-pushd ${DETECTOR_PREFIX}/${BEAMLINE_CONFIG}_build
-cmake ${DETECTOR_PREFIX}/${BEAMLINE_CONFIG} -DCMAKE_INSTALL_PREFIX=${LOCAL_PREFIX} -DCMAKE_CXX_STANDARD=17 && make -j$(($(nproc)/4+1)) install || exit 1
-popd
-rm -rf ${DETECTOR_PREFIX}/${BEAMLINE_CONFIG}_build
-
-
 
 ## =============================================================================
 ## Step 3: That's all!

@@ -82,11 +82,11 @@ detector_benchmarks:
   parallel:
     matrix:
       - DETECTOR: 'epic'
-        DETECTOR_CONFIG: 'epic_imaging'
+        DETECTOR_CONFIG: 'epic_arches'
         DETECTOR_VERSION: 'main'
         DETECTOR_REPOSITORYURL: 'https://github.com/eic/epic.git'
       - DETECTOR: 'epic'
-        DETECTOR_CONFIG: 'epic_sciglass'
+        DETECTOR_CONFIG: 'epic_brycecanyon'
         DETECTOR_VERSION: 'main'
         DETECTOR_REPOSITORYURL: 'https://github.com/eic/epic.git'
 
