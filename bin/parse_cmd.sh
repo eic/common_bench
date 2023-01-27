@@ -28,10 +28,10 @@ function print_the_help {
   echo "          --pbeam       Ion beam energy"
   echo "          --minq2       Minimum momentum transfer"  
   echo "          --config      Generator configuration identifiers (at least one)"
-  if [ ! -z ${REQUIRE_DECAY} ]; then
+  if [ ! -z ${REQUIRE_DECAY:-} ]; then
     echo "        --decay       Specific decay particle (e.g. muon)."
   fi
-  if [ ! -z ${REQUIRE_LEADING} ]; then
+  if [ ! -z ${REQUIRE_LEADING:-} ]; then
     echo "        --leading     Leading particle of interest (e.g. jpsi)."
   fi
   echo "          -h,--help     Print this message"
@@ -104,27 +104,27 @@ elif [ -z $PBEAM ]; then
   echo "ERROR: PBEAM not defined: --pbeam <energy>"
   print_the_help
   exit 1
-elif [ -z $MINQ2 ] && [ ! -z $REQUIRE_MINQ2 ]; then
+elif [ -z $MINQ2 ] && [ ! -z ${REQUIRE_MINQ2:-} ]; then
   echo "ERROR: MINQ2 not defined: --minq2 <energy>"
   print_the_help
   exit 1
-elif [ ! -z $MINQ2 ] && [ -z $REQUIRE_MINQ2 ]; then
+elif [ ! -z $MINQ2 ] && [ -z ${REQUIRE_MINQ2:-} ]; then
   echo "ERROR: MINQ2 flag specified but not required"
   print_the_help
   exit 1
-elif [ -z $LEADING ] && [ ! -z $REQUIRE_LEADING ]; then
+elif [ -z $LEADING ] && [ ! -z ${REQUIRE_LEADING:-} ]; then
   echo "ERROR: LEADING not defined: --leading <channel>"
   print_the_help
   exit 1
-elif [ ! -z $LEADING ] && [ -z $REQUIRE_LEADING ]; then
+elif [ ! -z $LEADING ] && [ -z ${REQUIRE_LEADING:-} ]; then
   echo "ERROR: LEADING flag specified but not required"
   print_the_help
   exit 1
-elif [ -z $DECAY ] && [ ! -z $REQUIRE_DECAY ]; then
+elif [ -z $DECAY ] && [ ! -z ${REQUIRE_DECAY:-} ]; then
   echo "ERROR: DECAY not defined: --decay <channel>"
   print_the_help
   exit 1
-elif [ ! -z $DECAY ] && [ -z $REQUIRE_DECAY ]; then
+elif [ ! -z $DECAY ] && [ -z ${REQUIRE_DECAY:-} ]; then
   echo "ERROR: DECAY flag specified but not required"
   print_the_help
   exit 1
@@ -134,12 +134,12 @@ fi
 export CONFIG
 export EBEAM
 export PBEAM
-if [ ! -z $REQUIRE_MINQ2 ]; then
+if [ ! -z ${REQUIRE_MINQ2:-} ]; then
   export MINQ2
 fi
-if [ ! -z $REQUIRE_LEADING ]; then
+if [ ! -z ${REQUIRE_LEADING:-} ]; then
   export LEADING
 fi
-if [ ! -z $REQUIRE_DECAY ]; then
+if [ ! -z ${REQUIRE_DECAY:-} ]; then
   export DECAY
 fi
