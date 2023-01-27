@@ -104,27 +104,27 @@ elif [ -z $PBEAM ]; then
   echo "ERROR: PBEAM not defined: --pbeam <energy>"
   print_the_help
   exit 1
-elif [ -z $MINQ2 ] && [ ! -z ${REQUIRE_MINQ2:-} ]; then
+elif [ ! -z ${REQUIRE_MINQ2:-} ] && [ -z $MINQ2 ]; then
   echo "ERROR: MINQ2 not defined: --minq2 <energy>"
   print_the_help
   exit 1
-elif [ ! -z $MINQ2 ] && [ -z ${REQUIRE_MINQ2:-} ]; then
+elif [ -z ${REQUIRE_MINQ2:-} ] && [ ! -z $MINQ2 ]; then
   echo "ERROR: MINQ2 flag specified but not required"
   print_the_help
   exit 1
-elif [ -z $LEADING ] && [ ! -z ${REQUIRE_LEADING:-} ]; then
+elif [ ! -z ${REQUIRE_LEADING:-} ] && [ -z $LEADING ]; then
   echo "ERROR: LEADING not defined: --leading <channel>"
   print_the_help
   exit 1
-elif [ ! -z $LEADING ] && [ -z ${REQUIRE_LEADING:-} ]; then
+elif [ -z ${REQUIRE_LEADING:-} ] && [ ! -z $LEADING ]; then
   echo "ERROR: LEADING flag specified but not required"
   print_the_help
   exit 1
-elif [ -z $DECAY ] && [ ! -z ${REQUIRE_DECAY:-} ]; then
+elif [ ! -z ${REQUIRE_DECAY:-} ] && [ -z $DECAY ]; then
   echo "ERROR: DECAY not defined: --decay <channel>"
   print_the_help
   exit 1
-elif [ ! -z $DECAY ] && [ -z ${REQUIRE_DECAY:-} ]; then
+elif [ -z ${REQUIRE_DECAY:-} ] && [ ! -z $DECAY ]; then
   echo "ERROR: DECAY flag specified but not required"
   print_the_help
   exit 1
