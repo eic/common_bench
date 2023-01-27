@@ -26,13 +26,15 @@ function print_the_help {
   echo "REQUIRED ARGUMENTS:"
   echo "          --ebeam       Electron beam energy"
   echo "          --pbeam       Ion beam energy"
-  echo "          --minq2       Minimum momentum transfer"  
   echo "          --config      Generator configuration identifiers (at least one)"
+  if [ ! -z ${REQUIRE_MINQ2:-} ]; then
+    echo "          --minq2       Minimum momentum transfer"  
+  fi
   if [ ! -z ${REQUIRE_DECAY:-} ]; then
-    echo "        --decay       Specific decay particle (e.g. muon)."
+    echo "          --decay       Specific decay particle (e.g. muon)."
   fi
   if [ ! -z ${REQUIRE_LEADING:-} ]; then
-    echo "        --leading     Leading particle of interest (e.g. jpsi)."
+    echo "          --leading     Leading particle of interest (e.g. jpsi)."
   fi
   echo "          -h,--help     Print this message"
   echo ""
@@ -44,8 +46,9 @@ function print_the_help {
 EBEAM=
 PBEAM=
 MINQ2=
-DECAYS=
+DECAY=
 CONFIG=
+LEADING=
 
 while [ $# -gt 0 ]
 do
@@ -92,39 +95,39 @@ do
   esac
 done
 
-if [ -z $CONFIG ]; then
+if [ -z ${CONFIG:-} ]; then
   echo "ERROR: CONFIG not defined: --config <config>"
   print_the_help
   exit 1
-elif [ -z $EBEAM ]; then
+elif [ -z ${EBEAM:-} ]; then
   echo "ERROR: EBEAM not defined: --ebeam <energy>"
   print_the_help
   exit 1
-elif [ -z $PBEAM ]; then
+elif [ -z ${PBEAM:-} ]; then
   echo "ERROR: PBEAM not defined: --pbeam <energy>"
   print_the_help
   exit 1
-elif [ ! -z ${REQUIRE_MINQ2:-} ] && [ -z $MINQ2 ]; then
+elif [ ! -z ${REQUIRE_MINQ2:-} ] && [ -z ${MINQ2:-} ]; then
   echo "ERROR: MINQ2 not defined: --minq2 <energy>"
   print_the_help
   exit 1
-elif [ -z ${REQUIRE_MINQ2:-} ] && [ ! -z $MINQ2 ]; then
+elif [ -z ${REQUIRE_MINQ2:-} ] && [ ! -z ${MINQ2:-} ]; then
   echo "ERROR: MINQ2 flag specified but not required"
   print_the_help
   exit 1
-elif [ ! -z ${REQUIRE_LEADING:-} ] && [ -z $LEADING ]; then
+elif [ ! -z ${REQUIRE_LEADING:-} ] && [ -z ${LEADING:-} ]; then
   echo "ERROR: LEADING not defined: --leading <channel>"
   print_the_help
   exit 1
-elif [ -z ${REQUIRE_LEADING:-} ] && [ ! -z $LEADING ]; then
+elif [ -z ${REQUIRE_LEADING:-} ] && [ ! -z ${LEADING:-} ]; then
   echo "ERROR: LEADING flag specified but not required"
   print_the_help
   exit 1
-elif [ ! -z ${REQUIRE_DECAY:-} ] && [ -z $DECAY ]; then
+elif [ ! -z ${REQUIRE_DECAY:-} ] && [ -z ${DECAY:-} ]; then
   echo "ERROR: DECAY not defined: --decay <channel>"
   print_the_help
   exit 1
-elif [ -z ${REQUIRE_DECAY:-} ] && [ ! -z $DECAY ]; then
+elif [ -z ${REQUIRE_DECAY:-} ] && [ ! -z ${DECAY:-} ]; then
   echo "ERROR: DECAY flag specified but not required"
   print_the_help
   exit 1
