@@ -5,15 +5,13 @@
 ## The script defines the following environment variables that are meant to
 ## be overriden by the Gitlab continuous integration (CI)
 ##
-##  - BEAMLINE_CONFIG:         compact detector files for the interaciton point beamline
-##  - BEAMLINE_CONFIG_VERSION: compact detector files for the interaciton point beamline
-##  - DETECTOR:        detector package to be used for the benchmark
-##  - DETECTOR_CONFIG: detector package config to be used for the benchmark
+##  - DETECTOR:                detector package to be used for the benchmark
+##  - DETECTOR_CONFIG:         detector package config to be used for the benchmark
 ##  - DETECTOR_VERSION:        detector package to be used for the benchmark
-##  - JUGGLER_N_EVENTS:        events processed by simulation/reconstruction
+##  - BENCHMARK_N_EVENTS:      events processed by simulation/reconstruction
+##  - BENCHMARK_N_THREADS:     number of threads/processes to spawn in parallel
+##  - BENCHMARK_RNG_SEED:      random seed for the RNG
 ##  - JUGGLER_INSTALL_PREFIX:  location where Juggler (digi/recon) is installed
-##  - JUGGLER_N_THREADS:       Number of threads/processes to spawn in parallel
-##  - JUGGLER_RNG_SEED:        Random seed for the RNG
 ##
 ## It also defines the following additional variables for internally usage
 ##  - LOCAL_PREFIX:           prefix for packages installed during the benchmark
@@ -33,19 +31,6 @@ echo "Setting up the Physics Benchmarks environment"
 ## in case you would like to modify the detector package or
 ## number of events to be analyzed during the benchmark
 
-if [ ! -n  "${BEAMLINE_CONFIG}" ] ; then 
-  export BEAMLINE_CONFIG="ip6"
-fi
-
-if [ ! -n  "${BEAMLINE_CONFIG_VERSION}" ] ; then 
-  export BEAMLINE_CONFIG_VERSION="master"
-fi
-
-if [ ! -n  "${BEAMLINE_REPOSITORYURL}" ] ; then 
-  export BEAMLINE_REPOSITORYURL="https://github.com/eic/${BEAMLINE_CONFIG}.git"
-fi
-
-
 ## Detector package to be used during the benchmark process
 if [ ! -n  "${DETECTOR}" ] ; then 
   export DETECTOR="epic"
@@ -64,23 +49,26 @@ if [ ! -n  "${DETECTOR_REPOSITORYURL}" ] ; then
 fi
 
 ## Number of events that will be processed by the reconstruction
-if [ ! -n  "${JUGGLER_N_EVENTS}" ] ; then 
-  export JUGGLER_N_EVENTS=100
+if [ ! -n  "${BENCHMARK_N_EVENTS}" ] ; then 
+  export BENCHMARK_N_EVENTS=100
 fi
+export JUGGLER_N_EVENTS=${BENCHMARK_N_EVENTS}
 
 ## Maximum number of threads or processes a single pipeline should use
 ## (this is not enforced, but the different pipeline scripts should use
 ##  this to guide the number of parallel processes or threads they 
 ##  spawn).
-if [ ! -n "${JUGGLER_N_THREADS}" ]; then
-  export JUGGLER_N_THREADS=10
+if [ ! -n "${BENCHMARK_N_THREADS}" ]; then
+  export BENCHMARK_N_THREADS=10
 fi
+export JUGGLER_N_THREADS=${BENCHMARK_N_THREADS}
 
 ## Random seed for event generation, should typically not be changed for
 ## reproductability.
-if [ ! -n "${JUGGLER_RNG_SEED}" ]; then
-  export JUGGLER_RNG_SEED=1
+if [ ! -n "${BENCHMARK_RNG_SEED}" ]; then
+  export BENCHMARK_RNG_SEED=1
 fi
+export JUGGLER_RNG_SEED=${BENCHMARK_RNG_SEED}
 
 ## Install prefix for juggler, needed to locate the Juggler xenv files.
 ## Also used by the CI as install prefix for other packages where needed.
@@ -122,7 +110,6 @@ export DETECTOR_PREFIX="${LOCAL_PREFIX}/detector"
 mkdir -p ${DETECTOR_PREFIX}
 
 ## detector path: actual detector definition path
-export BEAMLINE_PATH="${DETECTOR_PREFIX}/${BEAMLINE_CONFIG}"
 export DETECTOR_PATH="${DETECTOR_PREFIX}/${DETECTOR}"
 
 ## build dir for ROOT to put its binaries etc.
@@ -130,23 +117,22 @@ export ROOT_BUILD_DIR=$LOCAL_PREFIX/root_build
 
 export ROOT_INCLUDE_PATH=${LOCAL_PREFIX}/include:${ROOT_INCLUDE_PATH}
 
-echo "BEAMLINE_CONFIG:            ${BEAMLINE_CONFIG}"
-echo "BEAMLINE_CONFIG_VERSION:    ${BEAMLINE_CONFIG_VERSION}"
-echo "BEAMLINE_REPOSITORYURL:     ${BEAMLINE_REPOSITORYURL}"
-echo "DETECTOR:                   ${DETECTOR}"
-echo "DETECTOR_CONFIG:            ${DETECTOR_CONFIG}"
-echo "DETECTOR_VERSION:           ${DETECTOR_VERSION}"
-echo "DETECTOR_REPOSITORYURL:     ${DETECTOR_REPOSITORYURL}"
-echo "JUGGLER_N_EVENTS:           ${JUGGLER_N_EVENTS}"
-echo "JUGGLER_N_THREADS:          ${JUGGLER_N_THREADS}"
-echo "JUGGLER_RNG_SEED:           ${JUGGLER_RNG_SEED}"
-echo "JUGGLER_INSTALL_PREFIX:     ${JUGGLER_INSTALL_PREFIX}"
-echo "LOCAL_PREFIX:               ${LOCAL_PREFIX}"
-echo "DETECTOR_PREFIX:            ${DETECTOR_PREFIX}"
-echo "DETECTOR_PATH:              ${DETECTOR_PATH}"
-echo "ROOT_BUILD_DIR:             ${ROOT_BUILD_DIR}"
-echo "ROOT_INCLUDE_PATH:          ${ROOT_INCLUDE_PATH}"
-echo "LOCAL_DATA_PATH:            ${LOCAL_DATA_PATH}"
+echo "DETECTOR=${DETECTOR}" >> .env
+echo "DETECTOR_CONFIG=${DETECTOR_CONFIG}" >> .env
+echo "DETECTOR_VERSION=${DETECTOR_VERSION}" >> .env
+echo "DETECTOR_REPOSITORYURL=${DETECTOR_REPOSITORYURL}" >> .env
+echo "BENCHMARK_N_EVENTS=${BENCHMARK_N_EVENTS}" >> .env
+echo "BENCHMARK_N_THREADS=${BENCHMARK_N_THREADS}" >> .env
+echo "BENCHMARK_RNG_SEED=${BENCHMARK_RNG_SEED}" >> .env
+echo "JUGGLER_N_EVENTS=${JUGGLER_N_EVENTS}" >> .env
+echo "JUGGLER_N_THREADS=${JUGGLER_N_THREADS}" >> .env
+echo "JUGGLER_RNG_SEED=${JUGGLER_RNG_SEED}" >> .env
+echo "LOCAL_PREFIX=${LOCAL_PREFIX}" >> .env
+echo "DETECTOR_PREFIX=${DETECTOR_PREFIX}" >> .env
+echo "DETECTOR_PATH=${DETECTOR_PATH}" >> .env
+echo "ROOT_BUILD_DIR=${ROOT_BUILD_DIR}" >> .env
+echo "ROOT_INCLUDE_PATH=${ROOT_INCLUDE_PATH}" >> .env
+echo "LOCAL_DATA_PATH=${LOCAL_DATA_PATH}" >> .env
 
 ## =============================================================================
 ## Setup PATH and LD_LIBRARY_PATH to include our prefixes
