@@ -11,7 +11,6 @@
 ##  - BENCHMARK_N_EVENTS:      events processed by simulation/reconstruction
 ##  - BENCHMARK_N_THREADS:     number of threads/processes to spawn in parallel
 ##  - BENCHMARK_RNG_SEED:      random seed for the RNG
-##  - JUGGLER_INSTALL_PREFIX:  location where Juggler (digi/recon) is installed
 ##
 ## It also defines the following additional variables for internally usage
 ##  - LOCAL_PREFIX:           prefix for packages installed during the benchmark
@@ -70,17 +69,6 @@ if [ ! -n "${BENCHMARK_RNG_SEED}" ]; then
 fi
 export JUGGLER_RNG_SEED=${BENCHMARK_RNG_SEED}
 
-## Install prefix for juggler, needed to locate the Juggler xenv files.
-## Also used by the CI as install prefix for other packages where needed.
-## You should not have to touch this. Note that for local usage a different 
-## prefix structure is automatically used.
-if [ ! -n  "${JUGGLER_INSTALL_PREFIX}" ] ; then 
-  export JUGGLER_INSTALL_PREFIX="/usr/local"
-fi
-## Ensure the juggler prefix is an absolute path
-export JUGGLER_INSTALL_PREFIX=`realpath ${JUGGLER_INSTALL_PREFIX}`
-
-
 ## Location of local data for pass data from job to job within pipeline.
 ## Not saved as artifacts.
 ## Local /scratch directory is presumed to be writable. 
@@ -136,9 +124,9 @@ echo "LOCAL_DATA_PATH=${LOCAL_DATA_PATH}" >> .env
 
 ## =============================================================================
 ## Setup PATH and LD_LIBRARY_PATH to include our prefixes
-echo "Adding JUGGLER_INSTALL_PREFIX and LOCAL_PREFIX to PATH and LD_LIBRARY_PATH"
-export PATH=${LOCAL_PREFIX}/bin:${JUGGLER_INSTALL_PREFIX}/bin:${PATH}
-export LD_LIBRARY_PATH=${LOCAL_PREFIX}/lib:${JUGGLER_INSTALL_PREFIX}/lib:${LD_LIBRARY_PATH}
+echo "Adding LOCAL_PREFIX to PATH and LD_LIBRARY_PATH"
+export PATH=${LOCAL_PREFIX}/bin:${PATH}
+export LD_LIBRARY_PATH=${LOCAL_PREFIX}/lib:${LD_LIBRARY_PATH}
 
 # Local field maps
 mkdir -p ${LOCAL_DATA_PATH}/fieldmaps
