@@ -62,7 +62,7 @@ export JUGGLER_N_EVENTS=${BENCHMARK_N_EVENTS}
 if [ "${BEAMLINE}" ] ; then
 
   if [ ! -n  "${BEAMLINE_VERSION}" ] ; then 
-    export BEAMLINE_VERSION="master"
+    export BEAMLINE_VERSION="main"
   fi
 
   if [ ! -n  "${BEAMLINE_REPOSITORYURL}" ] ; then 
