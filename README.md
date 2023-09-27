@@ -5,9 +5,9 @@
 ## Overview
 
 Code common to:
- - `detector_benchmarks`
- - `reconstruction_benchmarks`
- - `physics_benchmarks`
+ - [`detector_benchmarks`](https://eicweb.phy.anl.gov/eic/benchmarks/detector_benchmarks/)
+ - [`reconstruction_benchmarks`](https://eicweb.phy.anl.gov/eic/benchmarks/reconstruction_benchmarks/)
+ - [`physics_benchmarks`](https://eicweb.phy.anl.gov/eic/benchmarks/physics_benchmarks/)
 
 
 ## Usage

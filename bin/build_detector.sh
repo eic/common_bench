@@ -48,6 +48,33 @@ fi
 rm -rf "${DETECTOR}/.git"
 
 popd
+
+if [ "${BEAMLINE}" ]; then 
+  pushd ${DETECTOR_PREFIX}
+  ## We need an up-to-date copy of the detector
+  ## start clean to avoid issues...
+  if [ -d "${BEAMLINE}" ]; then
+    echo "cleaning up ${BEAMLINE}" 
+    mv "${BEAMLINE}" "$(mktemp)-${BEAMLINE}"
+  fi
+  echo "Fetching ${BEAMLINE}"
+  if [ -n "${BEAMLINE_DEPLOY_TOKEN_USERNAME:-}" -a -n "${BEAMLINE_DEPLOY_TOKEN_PASSWORD:-}" ]; then
+    DEPLOY_TOKEN="${BEAMLINE_DEPLOY_TOKEN_USERNAME}:${BEAMLINE_DEPLOY_TOKEN_PASSWORD}@"
+    echo "Deploy token for ${BEAMLINE_DEPLOY_TOKEN_USERNAME} is masked in the next line."
+  else
+    DEPLOY_TOKEN=""
+  fi
+  echo "git clone -b ${BEAMLINE_VERSION} --depth 1 ${BEAMLINE_REPOSITORYURL:-https://eicweb.phy.anl.gov/EIC/detectors/${BEAMLINE}.git} ${BEAMLINE}"
+  git clone -b ${BEAMLINE_VERSION} --depth 1 ${BEAMLINE_REPOSITORYURL:-https://${DEPLOY_TOKEN}eicweb.phy.anl.gov/EIC/detectors/${BEAMLINE}.git} ${BEAMLINE}
+  [[ "$?" == "0" ]]  ||  exit 1
+  rm -rf "${BEAMLINE}/.git"
+
+  ln -s -f ${DETECTOR_PREFIX}/${BEAMLINE}/${BEAMLINE} ${DETECTOR_PATH}/${BEAMLINE}
+  [[ "$?" == "0" ]]  ||  exit 1
+  popd
+fi
+
+
 ## =============================================================================
 ## Step 2: Compile and install the detector definition
 echo "Building and installing the ${DETECTOR} package"

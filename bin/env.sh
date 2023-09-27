@@ -5,6 +5,8 @@
 ## The script defines the following environment variables that are meant to
 ## be overriden by the Gitlab continuous integration (CI)
 ##
+##  - BEAMLINE:         compact detector files for the interaciton point beamline
+##  - BEAMLINE_VERSION: compact detector files for the interaciton point beamline
 ##  - DETECTOR:                detector package to be used for the benchmark
 ##  - DETECTOR_CONFIG:         detector package config to be used for the benchmark
 ##  - DETECTOR_VERSION:        detector package to be used for the benchmark
@@ -44,7 +46,10 @@ if [ ! -n  "${DETECTOR_VERSION}" ] ; then
 fi
 
 if [ ! -n  "${DETECTOR_REPOSITORYURL}" ] ; then
-  export DETECTOR_REPOSITORYURL="https://github.com/eic/${DETECTOR}.git"
+  export DETECTOR_REPOSITORYURL="https://eicweb.phy.anl.gov/EIC/detectors/${DETECTOR}.git"
+  if [ "${DETECTOR}" == "epic" ] ; then
+    export DETECTOR_REPOSITORYURL="https://github.com/eic/${DETECTOR}.git"
+  fi
 fi
 
 ## Number of events that will be processed by the reconstruction
@@ -52,6 +57,20 @@ if [ ! -n  "${BENCHMARK_N_EVENTS}" ] ; then
   export BENCHMARK_N_EVENTS=100
 fi
 export JUGGLER_N_EVENTS=${BENCHMARK_N_EVENTS}
+
+# optionally use a BEAMLINE repository
+if [ "${BEAMLINE}" ] ; then
+
+  if [ ! -n  "${BEAMLINE_VERSION}" ] ; then 
+    export BEAMLINE_VERSION="master"
+  fi
+
+  if [ ! -n  "${BEAMLINE_REPOSITORYURL}" ] ; then 
+    export BEAMLINE_REPOSITORYURL="https://eicweb.phy.anl.gov/EIC/detectors/${BEAMLINE}.git"
+  fi
+fi
+
+
 
 ## Maximum number of threads or processes a single pipeline should use
 ## (this is not enforced, but the different pipeline scripts should use
@@ -109,6 +128,9 @@ echo "DETECTOR=${DETECTOR}" >> .env
 echo "DETECTOR_CONFIG=${DETECTOR_CONFIG}" >> .env
 echo "DETECTOR_VERSION=${DETECTOR_VERSION}" >> .env
 echo "DETECTOR_REPOSITORYURL=${DETECTOR_REPOSITORYURL}" >> .env
+echo "BEAMLINE=${BEAMLINE}" >> .env
+echo "BEAMLINE_VERSION=${BEAMLINE_VERSION}" >> .env
+echo "BEAMLINE_REPOSITORYURL=${BEAMLINE_REPOSITORYURL}" >> .env
 echo "BENCHMARK_N_EVENTS=${BENCHMARK_N_EVENTS}" >> .env
 echo "BENCHMARK_N_THREADS=${BENCHMARK_N_THREADS}" >> .env
 echo "BENCHMARK_RNG_SEED=${BENCHMARK_RNG_SEED}" >> .env
