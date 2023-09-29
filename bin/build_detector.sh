@@ -75,7 +75,7 @@ if [ "${BEAMLINE}" ]; then
 
   mkdir -p ${DETECTOR_PREFIX}/${BEAMLINE}_build
   pushd ${DETECTOR_PREFIX}/${BEAMLINE}_build
-  cmake ${DETECTOR_PATH} -DCMAKE_INSTALL_PREFIX=${LOCAL_PREFIX} -DCMAKE_CXX_STANDARD=17 && make -j$(($(nproc)/4+1)) install || exit 1
+  cmake ${DETECTOR_PREFIX}/${BEAMLINE} -DCMAKE_INSTALL_PREFIX=${LOCAL_PREFIX} -DCMAKE_CXX_STANDARD=17 && make -j$(($(nproc)/4+1)) install || exit 1
   popd
   rm -rf ${DETECTOR_PREFIX}/${BEAMLINE}_build
 
