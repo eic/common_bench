@@ -20,6 +20,7 @@ if [ -n "${LOCAL_PREFIX}" ] ; then
 else
   source ${LOCAL_PREFIX}/bin/env.sh
 fi
+./${LOCAL_PREFIX}/bin/print_env.sh
 
 
 ## =============================================================================
@@ -33,20 +34,24 @@ if [ -d "${DETECTOR}" ]; then
   echo "cleaning up ${DETECTOR}" 
   mv "${DETECTOR}" "$(mktemp)-${DETECTOR}"
 fi
+
 echo "Fetching ${DETECTOR}"
+
+#if [ "${DETECTOR}" == "epic" ] ; then 
 if [ -n "${DETECTOR_DEPLOY_TOKEN_USERNAME:-}" -a -n "${DETECTOR_DEPLOY_TOKEN_PASSWORD:-}" ]; then
   DEPLOY_TOKEN="${DETECTOR_DEPLOY_TOKEN_USERNAME}:${DETECTOR_DEPLOY_TOKEN_PASSWORD}@"
   echo "Deploy token for ${DETECTOR_DEPLOY_TOKEN_USERNAME} is masked in the next line."
 else
   DEPLOY_TOKEN=""
 fi
+
 echo "git clone -b ${DETECTOR_VERSION} --depth 1 ${DETECTOR_REPOSITORYURL:-https://eicweb.phy.anl.gov/EIC/detectors/${DETECTOR}.git} ${DETECTOR}"
 git clone -b ${DETECTOR_VERSION} --depth 1 ${DETECTOR_REPOSITORYURL:-https://${DEPLOY_TOKEN}eicweb.phy.anl.gov/EIC/detectors/${DETECTOR}.git} ${DETECTOR}
 if [ -f "${DETECTOR}/requirements.txt" ] ; then
   python -m pip install -r ${DETECTOR}/requirements.txt
 fi
-rm -rf "${DETECTOR}/.git"
 
+rm -rf "${DETECTOR}/.git"
 popd
 
 if [ "${BEAMLINE}" ]; then 
@@ -57,7 +62,9 @@ if [ "${BEAMLINE}" ]; then
     echo "cleaning up ${BEAMLINE}" 
     mv "${BEAMLINE}" "$(mktemp)-${BEAMLINE}"
   fi
+
   echo "Fetching ${BEAMLINE}"
+
   if [ -n "${BEAMLINE_DEPLOY_TOKEN_USERNAME:-}" -a -n "${BEAMLINE_DEPLOY_TOKEN_PASSWORD:-}" ]; then
     DEPLOY_TOKEN="${BEAMLINE_DEPLOY_TOKEN_USERNAME}:${BEAMLINE_DEPLOY_TOKEN_PASSWORD}@"
     echo "Deploy token for ${BEAMLINE_DEPLOY_TOKEN_USERNAME} is masked in the next line."
@@ -68,14 +75,15 @@ if [ "${BEAMLINE}" ]; then
   git clone -b ${BEAMLINE_VERSION} --depth 1 ${BEAMLINE_REPOSITORYURL:-https://${DEPLOY_TOKEN}eicweb.phy.anl.gov/EIC/detectors/${BEAMLINE}.git} ${BEAMLINE}
   [[ "$?" == "0" ]]  ||  exit 1
   rm -rf "${BEAMLINE}/.git"
-
-  ln -s -f ${DETECTOR_PREFIX}/${BEAMLINE}/${BEAMLINE} ${DETECTOR_PATH}/${BEAMLINE}
-  [[ "$?" == "0" ]]  ||  exit 1
   popd
+
+  #echo "ln -s -f ${BEAMLINE} ${DETECTOR}/${BEAMLINE} " 
+  #ln -s -f ${BEAMLINE} ${DETECTOR}/${BEAMLINE}
+  #[[ "$?" == "0" ]]  ||  exit 1
 
   mkdir -p ${DETECTOR_PREFIX}/${BEAMLINE}_build
   pushd ${DETECTOR_PREFIX}/${BEAMLINE}_build
-  cmake ${DETECTOR_PREFIX}/${BEAMLINE} -DCMAKE_INSTALL_PREFIX=${LOCAL_PREFIX} -DCMAKE_CXX_STANDARD=17 && make -j$(($(nproc)/4+1)) install || exit 1
+  cmake ${DETECTOR_PREFIX}/${BEAMLINE} -DCMAKE_INSTALL_PREFIX=${LOCAL_PREFIX} -DCMAKE_CXX_STANDARD=17 -DCENTRAL_DETECTOR=${DETECTOR} && make -j$(($(nproc)/4+1)) install || exit 1
   popd
   rm -rf ${DETECTOR_PREFIX}/${BEAMLINE}_build
 
@@ -88,7 +96,7 @@ echo "Building and installing the ${DETECTOR} package"
 
 mkdir -p ${DETECTOR_PREFIX}/${DETECTOR}_build
 pushd ${DETECTOR_PREFIX}/${DETECTOR}_build
-cmake ${DETECTOR_PATH} -DCMAKE_INSTALL_PREFIX=${LOCAL_PREFIX} -DCMAKE_CXX_STANDARD=17 && make -j$(($(nproc)/4+1)) install || exit 1
+cmake ${DETECTOR_PREFIX}/${DETECTOR} -DCMAKE_INSTALL_PREFIX=${LOCAL_PREFIX} -DCMAKE_CXX_STANDARD=17 && make -j$(($(nproc)/4+1)) install || exit 1
 popd
 rm -rf ${DETECTOR_PREFIX}/${DETECTOR}_build
 

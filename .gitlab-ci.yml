@@ -1,5 +1,9 @@
 image: ${BENCHMARKS_REGISTRY}/${BENCHMARKS_CONTAINER}:${BENCHMARKS_TAG}
 
+variables:
+  DETECTOR: "epic"
+  DETECTOR_VERSION: "main"
+
 workflow:
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
@@ -43,26 +47,28 @@ common:variables:
       echo "   CI_PIPELINE_SOURCE = ${CI_PIPELINE_SOURCE}"
       echo " COMMON_BENCH_VERSION = ${COMMON_BENCH_VERSION}"
       if [[ "${CI_PIPELINE_SOURCE}" == "push"  || "x${CI_PIPELINE_SOURCE}" == "xmerge_request_event"  || "$CI_COMMIT_BRANCH" == "master" ]]; then
-        export COMMON_BENCH_VERSION="${CI_COMMIT_REF_NAME}"
-        echo "COMMON_BENCH_VERSION = ${CI_COMMIT_REF_NAME}"
+        export COMMON_BENCH_VERSION=${CI_COMMIT_REF_NAME}
         echo "COMMON_BENCH_VERSION=${CI_COMMIT_REF_NAME}" >> .env
+        echo "DETECTOR=${DETECTOR}" >> .env
+        echo "DETECTOR_VERSION=${DETECTOR_VERSION}" >> .env
+        echo "COMMON_BENCH_VERSION=${CI_COMMIT_REF_NAME}"
       fi
       echo "COMMON_BENCH_VERSION = ${COMMON_BENCH_VERSION}"
 
 common:setup:
   stage: config
+  needs: ["common:variables"]
   rules:
     - if: '$CI_SERVER_HOST == "eicweb.phy.anl.gov"' 
-  needs: ["common:variables"]
   script:
-    - git clone -b "${COMMON_BENCH_VERSION}" "${CI_REPOSITORY_URL}"  setup 
+    - git clone -b ${CI_COMMIT_REF_NAME} https://eicweb.phy.anl.gov/EIC/benchmarks/common_bench.git setup 
     - source setup/bin/env.sh && ./setup/bin/install_common.sh
 
 common:detector:
   stage: initialize
+  needs: ["common:setup"]
   rules:
     - if: '$CI_SERVER_HOST == "eicweb.phy.anl.gov"' 
-  needs: ["common:setup"]
   script:
     - source .local/bin/env.sh && build_detector.sh
     - bin/mkdir_local_data_link sim_output 
@@ -81,6 +87,9 @@ detector_benchmarks:
     strategy: depend
   parallel:
     matrix:
+      - DETECTOR: 'DII'
+        DETECTOR_VERSION: 'main'
+        BEAMLINE: 'ip8'
       - DETECTOR: 'epic'
         DETECTOR_CONFIG: 'epic_arches'
         DETECTOR_VERSION: 'main'

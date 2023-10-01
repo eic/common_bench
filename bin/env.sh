@@ -33,20 +33,29 @@ echo "Setting up the Physics Benchmarks environment"
 ## number of events to be analyzed during the benchmark
 
 ## Detector package to be used during the benchmark process
-if [ ! -n  "${DETECTOR}" ] ; then 
-  export DETECTOR="epic"
+## If you didn't define DETECTOR already, you have bigger problesm
+
+if [ ! -n  "${DETECTOR}" ] ; then
+  echo "ERROR: No DETECTOR defined!" 
+  echo "       There is no assumed default detector."
+  echo "       Set the environment variable DETECTOR accordingly."
+  #export DETECTOR="epic"
 fi
 
-if [ ! -n  "${DETECTOR_CONFIG}" ] ; then
-  export DETECTOR_CONFIG="${DETECTOR}_full"
-fi
+# Optional variable, define it or don't use it
+#if [ ! -n  "${DETECTOR_CONFIG}" ] ; then
+#  export DETECTOR_CONFIG="${DETECTOR}_full"
+#fi
 
+# main is the new master
 if [ ! -n  "${DETECTOR_VERSION}" ] ; then 
   export DETECTOR_VERSION="main"
 fi
 
 if [ ! -n  "${DETECTOR_REPOSITORYURL}" ] ; then
   export DETECTOR_REPOSITORYURL="https://eicweb.phy.anl.gov/EIC/detectors/${DETECTOR}.git"
+
+  # This if statement should be removed -- just define the variable upstream. 
   if [ "${DETECTOR}" == "epic" ] ; then
     export DETECTOR_REPOSITORYURL="https://github.com/eic/${DETECTOR}.git"
   fi
