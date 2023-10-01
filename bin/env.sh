@@ -18,7 +18,7 @@
 ##  - LOCAL_PREFIX:           prefix for packages installed during the benchmark
 ##  - LOCAL_DATA_PATH:        local storage for pipeline jobs
 ##  - DETECTOR_PREFIX:        prefix for the detector definitions
-##  - DETECTOR_PATH:          actual path with the detector definitions
+##  - DETECTOR_PATH:          root path to locally installed detector definition xml files
 ##
 ## Finally, it makes sure LOCAL_PREFIX and JUGGLER_PREFIX are added to PATH
 ## and LD_LIBRARY_PATH
@@ -121,12 +121,12 @@ LOCAL_PREFIX=".local"
 mkdir -p "${LOCAL_PREFIX}"
 export LOCAL_PREFIX=`realpath ${LOCAL_PREFIX}`
 
-## detector prefix: prefix for the detector definitions
+## detector prefix: prefix for the detector definition repositories
 export DETECTOR_PREFIX="${LOCAL_PREFIX}/detector"
 mkdir -p ${DETECTOR_PREFIX}
 
-## detector path: actual detector definition path
-export DETECTOR_PATH="${DETECTOR_PREFIX}/${DETECTOR}"
+## detector path: root path to locally installed detector definition xml files
+export DETECTOR_PATH="${LOCAL_PREFIX}/share/${DETECTOR}"
 
 ## build dir for ROOT to put its binaries etc.
 export ROOT_BUILD_DIR=$LOCAL_PREFIX/root_build

@@ -11,9 +11,9 @@
 ## - DETECTOR: the detector package we want to use for this benchmark
 ## - LOCAL_PREFIX:     location where local packages should be installed
 ## - LOCAL_DATA_PATH:  local storage for pipeline jobs
-## - DETECTOR_PREFIX:  prefix for the detector definitions 
+## - DETECTOR_PREFIX:  prefix for the detector definition repositories
 ## - DETECTOR_PATH:    full path for the detector definitions
-##                     this is the same as ${DETECTOR_PREFIX}/${DETECTOR}
+##                     this is the same as ${LOCAL_PREFIX}/share/${DETECTOR}
 
 if [ -n "${LOCAL_PREFIX}" ] ; then 
   source .local/bin/env.sh
