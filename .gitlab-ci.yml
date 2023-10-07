@@ -3,6 +3,7 @@ image: ${BENCHMARKS_REGISTRY}/${BENCHMARKS_CONTAINER}:${BENCHMARKS_TAG}
 variables:
   DETECTOR: "epic"
   DETECTOR_VERSION: "main"
+  DETECTOR_CONFIG: 'epic_brycecanyon'
 
 workflow:
   rules:
@@ -45,13 +46,11 @@ common:variables:
   script:
     - |
       echo "   CI_PIPELINE_SOURCE = ${CI_PIPELINE_SOURCE}"
-      echo " COMMON_BENCH_VERSION = ${COMMON_BENCH_VERSION}"
       if [[ "${CI_PIPELINE_SOURCE}" == "push"  || "x${CI_PIPELINE_SOURCE}" == "xmerge_request_event"  || "$CI_COMMIT_BRANCH" == "master" ]]; then
         export COMMON_BENCH_VERSION=${CI_COMMIT_REF_NAME}
         echo "COMMON_BENCH_VERSION=${CI_COMMIT_REF_NAME}" >> .env
-        echo "DETECTOR=${DETECTOR}" >> .env
-        echo "DETECTOR_VERSION=${DETECTOR_VERSION}" >> .env
-        echo "COMMON_BENCH_VERSION=${CI_COMMIT_REF_NAME}"
+        #echo "DETECTOR=${DETECTOR}" >> .env
+        #echo "DETECTOR_VERSION=${DETECTOR_VERSION}" >> .env
       fi
       echo "COMMON_BENCH_VERSION = ${COMMON_BENCH_VERSION}"
 
@@ -80,21 +79,16 @@ detector_benchmarks:
   rules:
     - if: '$CI_SERVER_HOST == "eicweb.phy.anl.gov"' 
   needs: ["common:variables"]
-  variables:
-    COMMON_BENCH_VERSION: "$COMMON_BENCH_VERSION"
   trigger:
     project: EIC/benchmarks/detector_benchmarks
     strategy: depend
   parallel:
     matrix:
       - DETECTOR: 'epic'
-        DETECTOR_CONFIG: 'epic_arches'
+        DETECTOR_CONFIG: ['epic_arches','epic_brycecanyon']
         DETECTOR_VERSION: 'main'
         DETECTOR_REPOSITORYURL: 'https://github.com/eic/epic.git'
-      - DETECTOR: 'epic'
-        DETECTOR_CONFIG: 'epic_brycecanyon'
-        DETECTOR_VERSION: 'main'
-        DETECTOR_REPOSITORYURL: 'https://github.com/eic/epic.git'
+        COMMON_BENCH_VERSION: "$COMMON_BENCH_VERSION"
 
 
 other_detector_benchmarks:
@@ -102,8 +96,6 @@ other_detector_benchmarks:
   rules:
     - if: '$CI_SERVER_HOST == "eicweb.phy.anl.gov"' 
   needs: ["common:variables"]
-  variables:
-    COMMON_BENCH_VERSION: "$COMMON_BENCH_VERSION"
   trigger:
     project: EIC/benchmarks/detector_benchmarks
   parallel:
@@ -111,4 +103,5 @@ other_detector_benchmarks:
       - DETECTOR: 'DII'
         DETECTOR_VERSION: 'main'
         BEAMLINE: 'ip8'
+        COMMON_BENCH_VERSION: "$COMMON_BENCH_VERSION"
 
