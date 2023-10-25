@@ -3,7 +3,7 @@ image: ${BENCHMARKS_REGISTRY}/${BENCHMARKS_CONTAINER}:${BENCHMARKS_TAG}
 variables:
   DETECTOR: "epic"
   DETECTOR_VERSION: "main"
-  DETECTOR_CONFIG: 'epic_brycecanyon'
+  DETECTOR_CONFIG: 'epic_craterlake'
 
 workflow:
   rules:
@@ -85,7 +85,7 @@ detector_benchmarks:
   parallel:
     matrix:
       - DETECTOR: 'epic'
-        DETECTOR_CONFIG: ['epic_arches','epic_brycecanyon']
+        DETECTOR_CONFIG: ['epic_craterlake']
         DETECTOR_VERSION: 'main'
         DETECTOR_REPOSITORYURL: 'https://github.com/eic/epic.git'
         COMMON_BENCH_VERSION: "$COMMON_BENCH_VERSION"
