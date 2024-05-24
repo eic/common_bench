@@ -47,12 +47,9 @@ fi
 #  export DETECTOR_CONFIG="${DETECTOR}_full"
 #fi
 
+# main is the new master
 if [ ! -n  "${DETECTOR_VERSION}" ] ; then 
   export DETECTOR_VERSION="main"
-else
-  # handle spack version spec format (e.g. git.fcf90937193c983c0af2acf1251e01f2e2c3a259=main)
-  DETECTOR_VERSION=${DETECTOR_VERSION##git.}
-  export DETECTOR_VERSION=${DETECTOR_VERSION%%=*}
 fi
 
 if [ ! -n  "${DETECTOR_REPOSITORYURL}" ] ; then
