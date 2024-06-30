@@ -23,6 +23,19 @@ fi
 ./${LOCAL_PREFIX}/bin/print_env.sh
 
 
+# this is like git clone, but allows to fetch any reference, including by git commit SHA
+function fetchgit() {
+  local path=$1
+  local ref=$2
+  local uri=$3
+  mkdir ${path}
+  git -C "${path}" init
+  git -C "${path}" remote add origin "${uri}"
+  git -C "${path}" fetch origin "${ref}"
+  git -C "${path}" checkout "${ref}"
+}
+
+
 ## =============================================================================
 ## Step 1: download/update the detector definitions (if needed)
 pushd ${DETECTOR_PREFIX}
@@ -45,8 +58,8 @@ else
   DEPLOY_TOKEN=""
 fi
 
-echo "git clone -b ${DETECTOR_VERSION} --depth 1 ${DETECTOR_REPOSITORYURL:-https://eicweb.phy.anl.gov/EIC/detectors/${DETECTOR}.git} ${DETECTOR}"
-git clone -b ${DETECTOR_VERSION} --depth 1 ${DETECTOR_REPOSITORYURL:-https://${DEPLOY_TOKEN}eicweb.phy.anl.gov/EIC/detectors/${DETECTOR}.git} ${DETECTOR}
+echo "fetchgit ${DETECTOR} ${DETECTOR_VERSION} ${DETECTOR_REPOSITORYURL:-https://eicweb.phy.anl.gov/EIC/detectors/${DETECTOR}.git}"
+fetchgit ${DETECTOR} ${DETECTOR_VERSION} ${DETECTOR_REPOSITORYURL:-https://${DEPLOY_TOKEN}eicweb.phy.anl.gov/EIC/detectors/${DETECTOR}.git}
 if [ -f "${DETECTOR}/requirements.txt" ] ; then
   python -m pip install -r ${DETECTOR}/requirements.txt
 fi
@@ -71,8 +84,8 @@ if [ "${BEAMLINE}" ]; then
   else
     DEPLOY_TOKEN=""
   fi
-  echo "git clone -b ${BEAMLINE_VERSION} --depth 1 ${BEAMLINE_REPOSITORYURL:-https://eicweb.phy.anl.gov/EIC/detectors/${BEAMLINE}.git} ${BEAMLINE}"
-  git clone -b ${BEAMLINE_VERSION} --depth 1 ${BEAMLINE_REPOSITORYURL:-https://${DEPLOY_TOKEN}eicweb.phy.anl.gov/EIC/detectors/${BEAMLINE}.git} ${BEAMLINE}
+  echo "fetchgit ${BEAMLINE} ${BEAMLINE_VERSION} ${BEAMLINE_REPOSITORYURL:-https://eicweb.phy.anl.gov/EIC/detectors/${BEAMLINE}.git}"
+  fetchgit ${BEAMLINE} ${BEAMLINE_VERSION} ${BEAMLINE_REPOSITORYURL:-https://${DEPLOY_TOKEN}eicweb.phy.anl.gov/EIC/detectors/${BEAMLINE}.git}
   [[ "$?" == "0" ]]  ||  exit 1
   rm -rf "${BEAMLINE}/.git"
   popd
