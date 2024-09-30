@@ -62,14 +62,6 @@ common:setup:
   script:
     - git clone -b ${CI_COMMIT_REF_NAME} https://eicweb.phy.anl.gov/EIC/benchmarks/common_bench.git setup 
     - source setup/bin/env.sh && ./setup/bin/install_common.sh
-
-common:detector:
-  stage: initialize
-  needs: ["common:setup"]
-  rules:
-    - if: '$CI_SERVER_HOST == "eicweb.phy.anl.gov"' 
-  script:
-    - source .local/bin/env.sh && build_detector.sh
     - bin/mkdir_local_data_link sim_output 
     - print_env.sh
     - ls -lrth
