@@ -82,6 +82,38 @@ detector_benchmarks:
         DETECTOR_REPOSITORYURL: 'https://github.com/eic/epic.git'
         COMMON_BENCH_VERSION: "$COMMON_BENCH_VERSION"
 
+reconstruction_benchmarks:
+  stage: benchmarks
+  rules:
+    - if: '$CI_SERVER_HOST == "eicweb.phy.anl.gov"' 
+  needs: ["common:variables"]
+  trigger:
+    project: EIC/benchmarks/reconstruction_benchmarks
+    strategy: depend
+  parallel:
+    matrix:
+      - DETECTOR: 'epic'
+        DETECTOR_CONFIG: ['epic_craterlake']
+        DETECTOR_VERSION: 'main'
+        DETECTOR_REPOSITORYURL: 'https://github.com/eic/epic.git'
+        COMMON_BENCH_VERSION: "$COMMON_BENCH_VERSION"
+
+physics_benchmarks:
+  stage: benchmarks
+  rules:
+    - if: '$CI_SERVER_HOST == "eicweb.phy.anl.gov"' 
+  needs: ["common:variables"]
+  trigger:
+    project: EIC/benchmarks/physics_benchmarks
+    strategy: depend
+  parallel:
+    matrix:
+      - DETECTOR: 'epic'
+        DETECTOR_CONFIG: ['epic_craterlake']
+        DETECTOR_VERSION: 'main'
+        DETECTOR_REPOSITORYURL: 'https://github.com/eic/epic.git'
+        COMMON_BENCH_VERSION: "$COMMON_BENCH_VERSION"
+
 
 other_detector_benchmarks:
   stage: benchmarks
