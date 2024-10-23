@@ -179,7 +179,7 @@ def _aggregate_results(results):
 
 def _save(benchmark, results):
     '''Save benchmark results'''
-    ofile = Path(OUTPUT_FILE.format(benchmark))
+    ofile = Path(OUTPUT_FILE.format(Path(benchmark).name))
     print('  --> Saving benchmark results to:', ofile)
     with ofile.open('w') as f:
         json.dump(results, f, indent=4)
