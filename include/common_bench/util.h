@@ -28,14 +28,17 @@ namespace common_bench {
  */
 class unknown_particle_error : public std::exception {
 public:
-  unknown_particle_error(std::string_view particle) : m_particle{particle} {}
+  unknown_particle_error(std::string_view particle)
+      : m_particle{particle},
+        m_msg(fmt::format("Unknown particle type: {}", m_particle)) {}
   virtual const char *what() const throw() {
-    return fmt::format("Unknown particle type: {}", m_particle).c_str();
+    return m_msg.c_str();
   }
   virtual const char *type() const throw() { return "unknown_particle_error"; }
 
 private:
   const std::string m_particle;
+  const std::string m_msg;
 };
 
 /** Simple function for pdg masses.
