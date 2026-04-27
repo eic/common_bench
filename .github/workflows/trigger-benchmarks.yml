@@ -17,7 +17,12 @@ jobs:
         gh workflow run mirror.yaml \
           --repo eic/detector_benchmarks \
           --ref master \
-          -f COMMON_BENCH_VERSION="$COMMON_BENCH_VERSION"
+          -f COMMON_BENCH_VERSION="$COMMON_BENCH_VERSION" \
+          -f SOURCE_REPOSITORY="${{ github.repository }}" \
+          -f SOURCE_SHA="${{ github.event.pull_request.head.sha }}" \
+          -f SOURCE_PR="${{ github.event.pull_request.number }}" \
+          -f SOURCE_REF="${{ github.head_ref }}" \
+          -f SOURCE_TITLE="${{ github.event.pull_request.title }}"
 
   trigger-physics-benchmarks:
     name: Trigger physics_benchmarks
@@ -31,4 +36,9 @@ jobs:
         gh workflow run mirror.yaml \
           --repo eic/physics_benchmarks \
           --ref master \
-          -f COMMON_BENCH_VERSION="$COMMON_BENCH_VERSION"
+          -f COMMON_BENCH_VERSION="$COMMON_BENCH_VERSION" \
+          -f SOURCE_REPOSITORY="${{ github.repository }}" \
+          -f SOURCE_SHA="${{ github.event.pull_request.head.sha }}" \
+          -f SOURCE_PR="${{ github.event.pull_request.number }}" \
+          -f SOURCE_REF="${{ github.head_ref }}" \
+          -f SOURCE_TITLE="${{ github.event.pull_request.title }}"
