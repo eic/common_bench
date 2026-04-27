@@ -100,8 +100,13 @@ export JUGGLER_RNG_SEED=${BENCHMARK_RNG_SEED}
 ## Location of local data for pass data from job to job within pipeline.
 ## Not saved as artifacts.
 ## Local /scratch directory is presumed to be writable. 
-if [ ! -n  "${LOCAL_DATA_PATH}" ] ; then 
-  export LOCAL_DATA_PATH="/scratch/${CI_PROJECT_NAME}_${CI_PIPELINE_ID}"
+if [ ! -n  "${LOCAL_DATA_PATH}" ] ; then
+  if [ -w /scratch ] ; then
+    export LOCAL_DATA_PATH="/scratch/${CI_PROJECT_NAME}_${CI_PIPELINE_ID}"
+  else
+    echo "/scratch not writable; using $PWD/scratch"
+    export LOCAL_DATA_PATH="$PWD/scratch/${CI_PROJECT_NAME}_${CI_PIPELINE_ID}"
+  fi
 fi
 mkdir -p "${LOCAL_DATA_PATH}"
 if [ ! -d "${LOCAL_DATA_PATH}" ]; then 
