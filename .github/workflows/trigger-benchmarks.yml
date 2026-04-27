@@ -1,0 +1,34 @@
+name: Trigger Benchmarks
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+
+jobs:
+  trigger-detector-benchmarks:
+    name: Trigger detector_benchmarks
+    runs-on: ubuntu-latest
+    steps:
+    - name: Trigger detector_benchmarks workflow
+      env:
+        GH_TOKEN: ${{ secrets.WORKFLOW_TOKEN }}
+        COMMON_BENCH_VERSION: ${{ github.head_ref }}
+      run: |
+        gh workflow run mirror.yaml \
+          --repo eic/detector_benchmarks \
+          --ref master \
+          -f COMMON_BENCH_VERSION="$COMMON_BENCH_VERSION"
+
+  trigger-physics-benchmarks:
+    name: Trigger physics_benchmarks
+    runs-on: ubuntu-latest
+    steps:
+    - name: Trigger physics_benchmarks workflow
+      env:
+        GH_TOKEN: ${{ secrets.WORKFLOW_TOKEN }}
+        COMMON_BENCH_VERSION: ${{ github.head_ref }}
+      run: |
+        gh workflow run mirror.yaml \
+          --repo eic/physics_benchmarks \
+          --ref master \
+          -f COMMON_BENCH_VERSION="$COMMON_BENCH_VERSION"
