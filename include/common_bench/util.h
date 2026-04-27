@@ -1,30 +1,16 @@
 #ifndef UTIL_H
 #define UTIL_H
 
-
-#include <algorithm>
 #include <cmath>
 #include <exception>
 #include <fmt/core.h>
-#include <limits>
 #include <string>
-#include <vector>
-#include "TF1.h"
-#include "TFitResult.h"
-#include "TFitResultPtr.h"
 
 #include <Math/Vector4D.h>
-
-#include "edm4hep/MCParticleCollection.h"
-#include "edm4eic/TrackParametersCollection.h"
-#include "edm4eic/ReconstructedParticleCollection.h"
-#include "edm4eic/ReconstructedParticleData.h"
 
 namespace common_bench {
 
 /** Exception definition for unknown particle errors.
- *  \todo  Fixme: A utility exception base class should be included in the
- * analysis utility library, so we can skip most of this boilerplate
  */
 class unknown_particle_error : public std::exception {
 public:
@@ -42,10 +28,7 @@ private:
 };
 
 /** Simple function for pdg masses.
- *  Return the appropriate PDG mass for the particles
- *  we care about for this process.
- *  \todo FIXME: consider something more robust (maybe based on hepPDT) to the
- *         analysis utility library
+ *  Return the appropriate PDG mass for a small set of EIC-relevant particles.
  */
 inline double get_pdg_mass(std::string_view part) {
   if (part == "electron") {
@@ -63,62 +46,9 @@ inline double get_pdg_mass(std::string_view part) {
   }
 }
 
-/** Compute momentum from track parameters.
- * Get a vector of 4-momenta from raw tracking info, using an externally
- * provided particle mass assumption. //outputTrackParameters
- */
-inline auto
-momenta_from_tracking(const std::vector<edm4eic::TrackParametersData> &tracks,
-                      const double mass) {
-  std::vector<ROOT::Math::PxPyPzMVector> momenta{tracks.size()};
-  // transform our raw tracker info into proper 4-momenta
-  std::transform(tracks.begin(), tracks.end(), momenta.begin(),
-                 [mass](const auto &track) {
-                   // make sure we don't divide by zero
-                   if (fabs(track.qOverP) < 1e-9) {
-                     return ROOT::Math::PxPyPzMVector{};
-                   }
-                   const double p = fabs(1. / track.qOverP);
-                   const double px = p * cos(track.phi) * sin(track.theta);
-                   const double py = p * sin(track.phi) * sin(track.theta);
-                   const double pz = p * cos(track.theta);
-                   return ROOT::Math::PxPyPzMVector{px, py, pz, mass};
-                 });
-  return momenta;
-}
-
-/** Helper to get momentum 4 vector.
- */
-inline auto
-momenta_RC(const std::vector<edm4eic::ReconstructedParticleData> &parts) {
-  std::vector<ROOT::Math::PxPyPzMVector> momenta{parts.size()};
-  // transform our raw tracker info into proper 4-momenta
-  std::transform(parts.begin(), parts.end(), momenta.begin(),
-                 [](const auto &part) {
-                   return ROOT::Math::PxPyPzMVector{part.momentum.x, part.momentum.y,
-                                                    part.momentum.z, part.mass};
-                 });
-  return momenta;
-}
-
-/** Get a vector of 4-momenta from the simulation data.
- *  \TODO Add PID selector (maybe using ranges?)
- */
-inline auto
-momenta_from_simulation(const std::vector<edm4hep::MCParticleData> &parts) {
-  std::vector<ROOT::Math::PxPyPzMVector> momenta{parts.size()};
-  // transform our simulation particle data into 4-momenta
-  std::transform(parts.begin(), parts.end(), momenta.begin(),
-                 [](const auto &part) {
-                   return ROOT::Math::PxPyPzMVector{part.momentum.x, part.momentum.y,
-                                                    part.momentum.z, part.mass};
-                 });
-  return momenta;
-}
-
-/**  find the decay lepton pair.
+/**  Find the decay lepton pair.
  *  Find the decay pair candidates from a vector of particles (parts),
- *  with invariant mass closest to a desired value (pdg_mass)
+ *  with invariant mass closest to a desired value (pdg_mass).
  */
 inline std::pair<ROOT::Math::PxPyPzMVector, ROOT::Math::PxPyPzMVector>
 find_decay_pair(const std::vector<ROOT::Math::PxPyPzMVector> &parts,
@@ -127,9 +57,6 @@ find_decay_pair(const std::vector<ROOT::Math::PxPyPzMVector> &parts,
   int second = -1;
   double best_mass = -1;
 
-  // go through all particle combinatorics, calculate the invariant mass
-  // for each combination, and remember which combination is the closest
-  // to the desired pdg_mass
   for (size_t i = 0; i < parts.size(); ++i) {
     if (fabs(parts[i].mass() - daughter_mass) / daughter_mass > 0.01)
       continue;
@@ -148,48 +75,6 @@ find_decay_pair(const std::vector<ROOT::Math::PxPyPzMVector> &parts,
     return {{}, {}};
   }
   return {parts[first], parts[second]};
-}
-
-/**
- * Calculate the magnitude of the momentum of a vector of 4-vectors
- */
-inline auto mom(const std::vector<ROOT::Math::PxPyPzMVector> &momenta) {
-  std::vector<double> P(momenta.size());
-  // transform our raw tracker info into proper 4-momenta
-  std::transform(momenta.begin(), momenta.end(), P.begin(),
-                 [](const auto &mom) { return mom.P(); });
-  return P;
-}
-
-/**
- * Calculate the transverse momentum of a vector of 4-vectors
- */
-inline auto pt(const std::vector<ROOT::Math::PxPyPzMVector> &momenta) {
-  std::vector<double> pt(momenta.size());
-  // transform our raw tracker info into proper 4-momenta
-  std::transform(momenta.begin(), momenta.end(), pt.begin(),
-                 [](const auto &mom) { return mom.pt(); });
-  return pt;
-}
-
-/** Calculate the azimuthal angle phi of a vector of 4-vectors.
- */
-inline auto phi(const std::vector<ROOT::Math::PxPyPzMVector> &momenta) {
-  std::vector<double> phi(momenta.size());
-  // transform our raw tracker info into proper 4-momenta
-  std::transform(momenta.begin(), momenta.end(), phi.begin(),
-                 [](const auto &mom) { return mom.phi(); });
-  return phi;
-}
-
-/** Calculate the pseudo-rapidity of a vector of particles.
- */
-inline auto eta(const std::vector<ROOT::Math::PxPyPzMVector> &momenta) {
-  std::vector<double> eta(momenta.size());
-  // transform our raw tracker info into proper 4-momenta
-  std::transform(momenta.begin(), momenta.end(), eta.begin(),
-                 [](const auto &mom) { return mom.eta(); });
-  return eta;
 }
 
 } // namespace common_bench
