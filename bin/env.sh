@@ -5,8 +5,6 @@
 ## The script defines the following environment variables that are meant to
 ## be overriden by the Gitlab continuous integration (CI)
 ##
-##  - BEAMLINE:         compact detector files for the interaciton point beamline
-##  - BEAMLINE_VERSION: compact detector files for the interaciton point beamline
 ##  - DETECTOR:                detector package to be used for the benchmark
 ##  - DETECTOR_CONFIG:         detector package config to be used for the benchmark
 ##  - DETECTOR_VERSION:        detector package to be used for the benchmark
@@ -17,7 +15,6 @@
 ## It also defines the following additional variables for internally usage
 ##  - LOCAL_PREFIX:           prefix for packages installed during the benchmark
 ##  - LOCAL_DATA_PATH:        local storage for pipeline jobs
-##  - DETECTOR_PREFIX:        prefix for the detector definitions
 ##  - DETECTOR_PATH:          root path to locally installed detector definition xml files
 ##
 ## Finally, it makes sure LOCAL_PREFIX and JUGGLER_PREFIX are added to PATH
@@ -52,34 +49,11 @@ if [ ! -n  "${DETECTOR_VERSION}" ] ; then
   export DETECTOR_VERSION="main"
 fi
 
-if [ ! -n  "${DETECTOR_REPOSITORYURL}" ] ; then
-  export DETECTOR_REPOSITORYURL="https://eicweb.phy.anl.gov/EIC/detectors/${DETECTOR}.git"
-
-  # This if statement should be removed -- just define the variable upstream. 
-  if [ "${DETECTOR}" == "epic" ] ; then
-    export DETECTOR_REPOSITORYURL="https://github.com/eic/${DETECTOR}.git"
-  fi
-fi
-
 ## Number of events that will be processed by the reconstruction
 if [ ! -n  "${BENCHMARK_N_EVENTS}" ] ; then 
   export BENCHMARK_N_EVENTS=100
 fi
 export JUGGLER_N_EVENTS=${BENCHMARK_N_EVENTS}
-
-# optionally use a BEAMLINE repository
-if [ "${BEAMLINE}" ] ; then
-
-  if [ ! -n  "${BEAMLINE_VERSION}" ] ; then 
-    export BEAMLINE_VERSION="main"
-  fi
-
-  if [ ! -n  "${BEAMLINE_REPOSITORYURL}" ] ; then 
-    export BEAMLINE_REPOSITORYURL="https://eicweb.phy.anl.gov/EIC/detectors/${BEAMLINE}.git"
-  fi
-fi
-
-
 
 ## Maximum number of threads or processes a single pipeline should use
 ## (this is not enforced, but the different pipeline scripts should use
@@ -126,10 +100,6 @@ LOCAL_PREFIX=".local"
 mkdir -p "${LOCAL_PREFIX}"
 export LOCAL_PREFIX=`realpath ${LOCAL_PREFIX}`
 
-## detector prefix: prefix for the detector definition repositories
-export DETECTOR_PREFIX="${LOCAL_PREFIX}/detector"
-mkdir -p ${DETECTOR_PREFIX}
-
 ## detector path: root path to locally installed detector definition xml files
 export DETECTOR_PATH="${LOCAL_PREFIX}/share/${DETECTOR}"
 
@@ -141,10 +111,6 @@ export ROOT_INCLUDE_PATH=${LOCAL_PREFIX}/include:${ROOT_INCLUDE_PATH}
 echo "DETECTOR=${DETECTOR}" >> .env
 #echo "DETECTOR_CONFIG=${DETECTOR_CONFIG}" >> .env
 echo "DETECTOR_VERSION=${DETECTOR_VERSION}" >> .env
-echo "DETECTOR_REPOSITORYURL=${DETECTOR_REPOSITORYURL}" >> .env
-echo "BEAMLINE=${BEAMLINE}" >> .env
-echo "BEAMLINE_VERSION=${BEAMLINE_VERSION}" >> .env
-echo "BEAMLINE_REPOSITORYURL=${BEAMLINE_REPOSITORYURL}" >> .env
 #echo "BENCHMARK_N_EVENTS=${BENCHMARK_N_EVENTS}" >> .env
 #echo "BENCHMARK_N_THREADS=${BENCHMARK_N_THREADS}" >> .env
 #echo "BENCHMARK_RNG_SEED=${BENCHMARK_RNG_SEED}" >> .env
@@ -152,7 +118,6 @@ echo "BEAMLINE_REPOSITORYURL=${BEAMLINE_REPOSITORYURL}" >> .env
 #echo "JUGGLER_N_THREADS=${JUGGLER_N_THREADS}" >> .env
 #echo "JUGGLER_RNG_SEED=${JUGGLER_RNG_SEED}" >> .env
 echo "LOCAL_PREFIX=${LOCAL_PREFIX}" >> .env
-echo "DETECTOR_PREFIX=${DETECTOR_PREFIX}" >> .env
 echo "DETECTOR_PATH=${DETECTOR_PATH}" >> .env
 echo "ROOT_BUILD_DIR=${ROOT_BUILD_DIR}" >> .env
 echo "ROOT_INCLUDE_PATH=${ROOT_INCLUDE_PATH}" >> .env
