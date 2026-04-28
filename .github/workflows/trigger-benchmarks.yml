@@ -1,4 +1,4 @@
-hname: Trigger Benchmarks
+name: Trigger Benchmarks
 
 on:
   pull_request:
