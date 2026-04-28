@@ -109,14 +109,6 @@ export ROOT_BUILD_DIR=$LOCAL_PREFIX/root_build
 
 export ROOT_INCLUDE_PATH=${LOCAL_PREFIX}/include:${ROOT_INCLUDE_PATH}
 
-echo "DETECTOR=${DETECTOR}" >> .env
-echo "DETECTOR_VERSION=${DETECTOR_VERSION}" >> .env
-echo "LOCAL_PREFIX=${LOCAL_PREFIX}" >> .env
-echo "DETECTOR_PATH=${DETECTOR_PATH}" >> .env
-echo "ROOT_BUILD_DIR=${ROOT_BUILD_DIR}" >> .env
-echo "ROOT_INCLUDE_PATH=${ROOT_INCLUDE_PATH}" >> .env
-echo "LOCAL_DATA_PATH=${LOCAL_DATA_PATH}" >> .env
-
 ## =============================================================================
 ## Setup PATH and LD_LIBRARY_PATH to include our prefixes
 echo "Adding LOCAL_PREFIX to PATH and LD_LIBRARY_PATH"
