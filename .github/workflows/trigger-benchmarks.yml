@@ -1,4 +1,4 @@
-name: Trigger Benchmarks
+hname: Trigger Benchmarks
 
 on:
   pull_request:
@@ -21,7 +21,6 @@ jobs:
           -f SOURCE_REPOSITORY="${{ github.repository }}" \
           -f SOURCE_SHA="${{ github.event.pull_request.head.sha }}" \
           -f SOURCE_PR="${{ github.event.pull_request.number }}" \
-          -f SOURCE_REF="${{ github.head_ref }}" \
           -f SOURCE_TITLE="${{ github.event.pull_request.title }}"
 
   trigger-physics-benchmarks:
@@ -40,5 +39,4 @@ jobs:
           -f SOURCE_REPOSITORY="${{ github.repository }}" \
           -f SOURCE_SHA="${{ github.event.pull_request.head.sha }}" \
           -f SOURCE_PR="${{ github.event.pull_request.number }}" \
-          -f SOURCE_REF="${{ github.head_ref }}" \
           -f SOURCE_TITLE="${{ github.event.pull_request.title }}"
