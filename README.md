@@ -89,22 +89,4 @@ The idea is to write as much generic code  as possible, so this can be used by a
 | `BEAMLINE`         | Optional, name of beamline/interaction region to build first | `ip6` or `ip8`                                      | Not used if undefined                |
 | `BEAMLINE_VERSION` | Branch or tagged version to use                              | Same as                                             | Default typically `main` or `master` |
 
-#### Build Strategy
-
-First, let's start with the underlying assumptions: 
- - A "finished" container image will include a completely furnished detector (or detectors) -- from here, the goals is to run all the benchmarks.
- - Development necessitates rebuilding some of the packaged software. Here we need to avoid unintentionally using the container packaged version we want to supplant.
- - This problem persists across CI jobs, triggered pipelines, and working locally.
-
-In the case  
-
-
-#### Data Flow: Artifacts Vs dedicated storage
-
-
-
-
-### For benchmarks
-
-
 
