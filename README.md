@@ -17,7 +17,7 @@ Used by:
 
 ## Environment Setup (`bin/env.sh`)
 
-`bin/env.sh` is sourced in the `before_script` of every CI job. It sets default values for
+`bin/env.sh` is sourced early in each CI job. It sets default values for
 CI-controlled variables and establishes derived paths.
 
 ### Variables set by CI (override defaults)
@@ -35,7 +35,7 @@ CI-controlled variables and establishes derived paths.
 
 | Variable             | Value                                          | Meaning                                    |
 | :---                 | :---                                           | :---                                       |
-| `LOCAL_PREFIX`       | `$PWD/.local`                                  | Prefix for files installed during the benchmark (common_bench itself is cloned here) |
+| `LOCAL_PREFIX`       | `$PWD/.local`                                  | Prefix for files installed during the benchmark |
 | `DETECTOR_PATH`      | `$LOCAL_PREFIX/share/$DETECTOR`                | Root path to installed detector XML files  |
 | `ROOT_BUILD_DIR`     | `$LOCAL_PREFIX/root_build`                     | ROOT ACLiC build output directory          |
 | `ROOT_INCLUDE_PATH`  | `$LOCAL_PREFIX/include:...`                    | Additional include paths for ROOT/ACLiC    |
@@ -43,7 +43,7 @@ CI-controlled variables and establishes derived paths.
 | `JUGGLER_N_EVENTS`   | `$BENCHMARK_N_EVENTS`                          | Alias for legacy script compatibility      |
 | `JUGGLER_N_THREADS`  | `$BENCHMARK_N_THREADS`                         | Alias for legacy script compatibility      |
 | `JUGGLER_RNG_SEED`   | `$BENCHMARK_RNG_SEED`                          | Alias for legacy script compatibility      |
-| `LOCAL_DATA_PATH`    | `/scratch/${CI_PROJECT_NAME}_${CI_PIPELINE_ID}`| Scratch storage shared across pipeline jobs |
+| `LOCAL_DATA_PATH`    | `/scratch/${CI_PROJECT_NAME}_${CI_PIPELINE_ID}` if writable, otherwise `$PWD/scratch/${CI_PROJECT_NAME}_${CI_PIPELINE_ID}` | Scratch storage shared across pipeline jobs, with a working-directory fallback for local runs or constrained runners |
 
 ## Benchmark Reporting Library (`include/common_bench/`)
 
