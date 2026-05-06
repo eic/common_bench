@@ -1,92 +1,92 @@
-[TOC]
-
 # Common Benchmark Code
 
 ## Overview
 
-This repository aims to provide:
+This repository provides shared infrastructure for EIC detector and physics benchmarks:
 
-1. A common benchmark reporting library used in:
-   - [`detector_benchmarks`](https://eicweb.phy.anl.gov/eic/benchmarks/detector_benchmarks/)
-   - [`reconstruction_benchmarks`](https://eicweb.phy.anl.gov/eic/benchmarks/reconstruction_benchmarks/)
-   - [`physics_benchmarks`](https://eicweb.phy.anl.gov/eic/benchmarks/physics_benchmarks/)
-2. A set of tools to manage CI builds and data workflows in other project repos (such as those above).
+1. **A CI environment setup script** (`bin/env.sh`) sourced by every benchmark job to establish
+   a consistent set of environment variables.
+2. **A C++ benchmark reporting library** (`include/common_bench/`) used by analysis scripts to
+   record pass/fail test results as JSON.
+3. **Python and shell utilities** (`bin/`) for compiling ROOT analyses, collecting test results,
+   and managing local data directories.
 
-## Usage
+Used by:
+- [`detector_benchmarks`](https://github.com/eic/detector_benchmarks)
+- [`physics_benchmarks`](https://github.com/eic/physics_benchmarks)
 
- Bookkeeping of test data to store data of one or more tests in a json file to
- facilitate future accounting.
+## Environment Setup (`bin/env.sh`)
 
-### Usage Example 1 (single test):
+`bin/env.sh` is sourced in the `before_script` of every CI job. It sets default values for
+CI-controlled variables and establishes derived paths.
 
-#### define our test
+### Variables set by CI (override defaults)
 
-~~~~~~~~~~~~~{.cpp}
-common_bench::Test test1{
-  {{"name", "example_test"},
-    {"title", "Example Test"},
-    {"description", "This is an example of a test definition"},
-    {"quantity", "efficiency"},
-    {"target", "1"}}};
-~~~~~~~~~~~~~
+| Variable              | Default  | Meaning                                                |
+| :---                  | :---     | :---                                                   |
+| `DETECTOR`            | *(none)* | Detector package name (e.g. `epic`); **required**      |
+| `DETECTOR_CONFIG`     | *(none)* | Detector geometry config (e.g. `epic_full`); optional  |
+| `DETECTOR_VERSION`    | `main`   | Branch or tag of the detector package                  |
+| `BENCHMARK_N_EVENTS`  | `100`    | Number of events for simulation/reconstruction         |
+| `BENCHMARK_N_THREADS` | `10`     | Maximum parallel threads/processes per job             |
+| `BENCHMARK_RNG_SEED`  | `1`      | Random seed for reproducibility                        |
 
-#### set pass/fail/error status and return value (in this case .99)
+### Variables derived by `env.sh`
 
-~~~~~~~~~~~~~{.cpp}
-test1.pass(0.99)
-~~~~~~~~~~~~~
+| Variable             | Value                                          | Meaning                                    |
+| :---                 | :---                                           | :---                                       |
+| `LOCAL_PREFIX`       | `$PWD/.local`                                  | Prefix for files installed during the benchmark (common_bench itself is cloned here) |
+| `DETECTOR_PATH`      | `$LOCAL_PREFIX/share/$DETECTOR`                | Root path to installed detector XML files  |
+| `ROOT_BUILD_DIR`     | `$LOCAL_PREFIX/root_build`                     | ROOT ACLiC build output directory          |
+| `ROOT_INCLUDE_PATH`  | `$LOCAL_PREFIX/include:...`                    | Additional include paths for ROOT/ACLiC    |
+| `ROOT_MAX_THREADS`   | `$BENCHMARK_N_THREADS`                         | Caps ROOT implicit multi-threading         |
+| `JUGGLER_N_EVENTS`   | `$BENCHMARK_N_EVENTS`                          | Alias for legacy script compatibility      |
+| `JUGGLER_N_THREADS`  | `$BENCHMARK_N_THREADS`                         | Alias for legacy script compatibility      |
+| `JUGGLER_RNG_SEED`   | `$BENCHMARK_RNG_SEED`                          | Alias for legacy script compatibility      |
+| `LOCAL_DATA_PATH`    | `/scratch/${CI_PROJECT_NAME}_${CI_PIPELINE_ID}`| Scratch storage shared across pipeline jobs |
 
-#### write our test data to a json file
+## Benchmark Reporting Library (`include/common_bench/`)
 
-~~~~~~~~~~~~~{.cpp}
-common_bench::write_test(test1, "test1.json");
-~~~~~~~~~~~~~
+The `common_bench::Test` class and `write_test()` helper write pass/fail/error test results
+to JSON files for downstream aggregation by `bin/collect_tests.py` and `bin/collect_benchmarks.py`.
 
-### Usage Example 2 (multiple tests):
+Dependencies: [`{fmt}`](https://github.com/fmtlib/fmt), [`nlohmann/json`](https://github.com/nlohmann/json)
+(both available in the EIC software stack).
 
-#### Define our tests
+### Example: single test
 
-~~~~~~~~~~~~~{.cpp}
-common_bench::Test test1{{
-  {"name", "example_test"},
-  {"title", "Example Test"},
-  {"description", "This is an example of a test definition"},
-  {"quantity", "efficiency"},
-  {"target", "1"}}};
-common_bench::Test test2{{
-  {"name", "another_test"},
-  {"title", "Another example Test"},
-  {"description", "This is a second example of a test definition"},
-  {"quantity", "resolution"},
-  {"target", "3."}}};
-~~~~~~~~~~~~~
+```cpp
+#include "common_bench/benchmark.h"
 
-#### set pass/fail/error status and return value (in this case .99)
+common_bench::Test test{{
+  {"name",        "my_efficiency"},
+  {"title",       "Tracking efficiency"},
+  {"description", "Fraction of truth tracks reconstructed"},
+  {"quantity",    "efficiency"},
+  {"target",      "0.9"},
+  {"value",       "0"}}};
 
-~~~~~~~~~~~~~{.cpp}
-test1.fail(10)
-~~~~~~~~~~~~~
+test.pass(0.95);  // or test.fail(0.72) or test.error()
+common_bench::write_test(test, "results/my_efficiency.json");
+```
 
-#### write our test data to a json file
+### Example: multiple tests
 
-~~~~~~~~~~~~~{.cpp}
-common_bench::write_test({test1, test2}, "test.json");
-~~~~~~~~~~~~~
+```cpp
+common_bench::write_test({test1, test2}, "results/tracking.json");
+```
 
-## CI builds and data workflow tools
+## Utilities (`bin/`)
 
-### Environment Variables
-
-Here we aim to document a coherent set of environment varialbes to pass between CI jobs **and between pipelines**.
-The idea is to write as much generic code  as possible, so this can be used by any detector currently being implemented or yet to be defined.
-
-#### The Important Ones
-
-| Variable           | Meaning and use                                              | Examples                                            | Notes                                |
-| :---               | :---                                                         | :---                                                | :---                                 |
-| `DETECTOR`         | Name of detector and repository                              | `athena` or `epic`                                  |                                      |
-| `DETECTOR_VERSION` | Branch or tagged version to use                              | A PR branch name automatically generated from issue | Default typically `main` or `master` |
-| `BEAMLINE`         | Optional, name of beamline/interaction region to build first | `ip6` or `ip8`                                      | Not used if undefined                |
-| `BEAMLINE_VERSION` | Branch or tagged version to use                              | Same as                                             | Default typically `main` or `master` |
+| Script                 | Purpose                                                              |
+| :---                   | :---                                                                 |
+| `env.sh`               | CI environment setup — sourced in every job's `before_script`        |
+| `compile_analyses.py`  | Compiles ROOT ACLiC analysis scripts for a given benchmark directory |
+| `collect_tests.py`     | Collects individual JSON test results into a per-benchmark summary   |
+| `collect_benchmarks.py`| Merges all benchmark summaries into a master `results/summary.json`  |
+| `mkdir_local_data_link`| Creates `LOCAL_DATA_PATH/<dir>` and symlinks it into the working dir |
+| `strict-mode.sh`       | Shell strict-mode boilerplate (`set -Euo pipefail` + trap) for scripts|
+| `parse_cmd.sh`         | *(deprecated — pending removal)*                                     |
+| `print_env.sh`         | *(deprecated — pending removal)*                                     |
 
 
